@@ -1,0 +1,68 @@
+import javax.swing.*;
+
+public class acceso extends JFrame{
+
+    private String usuario;
+    private String password;
+    private JLabel etiquetaUsuario;
+    private JLabel etiquetaPassword;
+    private JTextField textoUsuario;
+    private JPasswordField textoPassword;
+    private JButton botonAceptar;
+    private ImageIcon logo;
+    private JLabel imagenLogo;
+
+
+    public acceso(){
+        // Posiciono los componentes de este constructor de forma manual
+        setLayout(null);    
+
+        // Añado los dos JLabel y el JTextField
+        etiquetaUsuario = new JLabel("Usuario: ");
+        etiquetaUsuario.setBounds(130,250,100,60);
+        add(etiquetaUsuario);
+
+        etiquetaPassword = new JLabel("Contraseña: ");
+        etiquetaPassword.setBounds(130,280,100,60);
+        add(etiquetaPassword);
+
+        textoUsuario = new JTextField();
+        textoUsuario.setBounds(220,260,150,30);
+        add(textoUsuario);
+
+        textoPassword = new JPasswordField();
+        textoPassword.setBounds(220,290,150,30);
+        add(textoPassword);
+
+        // Creo el botón que acepta el usuario y la contraseña
+        botonAceptar = new JButton("Validar");
+        botonAceptar.setBounds(160,350,90,30);
+        add(botonAceptar);
+
+        // Creo la imagen de logo y la posiciono sobre el texto de usuario/pass
+        logo = new ImageIcon("Proyecto/images/logo.jpg");
+        imagenLogo = new JLabel(logo);
+        // Voy a poner la imagen centrada
+        // Obtiene el ancho de la imagen
+        int anchoImagen = logo.getIconWidth();
+        // Calcula la posición X para centrarla
+        int posicionX = (450 - anchoImagen) / 2;
+        // Establece la nueva posición
+        imagenLogo.setBounds(posicionX, 10, anchoImagen, logo.getIconHeight());
+        add(imagenLogo);
+
+
+        setVisible(true);
+        setLocationRelativeTo(null);
+        setBounds(400,100,450,450);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
+
+    public static void main (String[] args){
+        new acceso();
+    }    
+
+
+}
