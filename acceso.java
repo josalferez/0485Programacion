@@ -71,7 +71,7 @@ public class acceso extends JFrame {
         getContentPane().setBackground(new Color(0x1f2b37));
 
         // Pongo un favicon en mi aplicación
-        ImageIcon favicon = new ImageIcon("Proyecto/images/favicon.ico");
+        ImageIcon favicon = new ImageIcon("Proyecto/images/favicon.jpg");
         setIconImage(favicon.getImage());
 
     }
