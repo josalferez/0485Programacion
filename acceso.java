@@ -22,12 +22,12 @@ public class acceso extends JFrame {
         // Añado los dos JLabel y el JTextField
         etiquetaUsuario = new JLabel("Usuario: ");
         etiquetaUsuario.setBounds(130, 250, 100, 60);
-        etiquetaUsuario.setForeground(Color.WHITE);
+        etiquetaUsuario.setForeground(Color.BLACK);
         add(etiquetaUsuario);
 
         etiquetaPassword = new JLabel("Contraseña: ");
         etiquetaPassword.setBounds(130, 280, 100, 60);
-        etiquetaPassword.setForeground(Color.WHITE);
+        etiquetaPassword.setForeground(Color.BLACK);
         add(etiquetaPassword);
 
         textoUsuario = new JTextField();
@@ -83,10 +83,10 @@ public class acceso extends JFrame {
         setBounds(400, 100, 450, 450);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setBackground(new Color(0x1f2b37));
+        getContentPane().setBackground(Color.WHITE);
 
         // Pongo un favicon en mi aplicación
-        ImageIcon favicon = new ImageIcon("Proyecto/images/favicon.jpg");
+        ImageIcon favicon = new ImageIcon("Proyecto/images/favicon.png");
         setIconImage(favicon.getImage());
 
     }
