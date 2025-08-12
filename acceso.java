@@ -1,11 +1,12 @@
 
 import java.awt.Color;
+import java.util.Arrays;
 import javax.swing.*;
 
 public class acceso extends JFrame {
 
-    private String usuario;
-    private String password;
+    private String usuario = "jose";
+    private String password = "12";
     private JLabel etiquetaUsuario;
     private JLabel etiquetaPassword;
     private JTextField textoUsuario;
@@ -45,9 +46,23 @@ public class acceso extends JFrame {
         // Le doy la funcionalidad al botón
         botonAceptar.addActionListener(e -> {
             
-            //Cierro la ventana actual y cargo la nueva ventana. 
-            dispose();
-            new main();
+            if (textoUsuario.getText().equals(usuario)) {
+                char[] contrasenaCorrectaArray = password.toCharArray();
+                char[] contrasenaIngresadaArray = textoPassword.getPassword();
+                if (Arrays.equals(contrasenaIngresadaArray, contrasenaCorrectaArray)){
+                    //Cierro la ventana actual y cargo la nueva ventana. 
+                    dispose();
+                    new main();
+                } else {
+                    JOptionPane.showMessageDialog(this,"La contraseña no es correcta", "Error", JOptionPane.ERROR_MESSAGE);   
+                    textoPassword.requestFocusInWindow(); 
+                    textoPassword.setText("");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,"Por favor, introduzca un usuario correcto", "Error", JOptionPane.ERROR_MESSAGE);
+                textoUsuario.requestFocusInWindow();
+                textoUsuario.setText("");
+            }
             
         });
 
