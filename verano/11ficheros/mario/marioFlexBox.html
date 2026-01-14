@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario con botón centrado</title>
+    <style>
+        form {
+            display: flex;            /* Activamos Flexbox */
+            justify-content: center;  /* Centra horizontalmente */
+            align-items: center;      /* Centra verticalmente */
+            height: 200px;            /* Damos altura al contenedor */
+            border: 1px solid #ccc; /* Solo para ver los límites */
+        }
+    </style>
+</head>
+
+<body>
+    <dialog id="myDialog" open closedby="any">
+        <h2>Bienvenido</h2>
+        <p>Este es un ejemplo de modal en HTML</p>
+        <form>
+            <button type="submit">Enviar</button>
+        </form>
+    </dialog>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+El Reto: La Cafetera y el Bote de Reserva
+Contexto: Tenemos una cafetera profesional en un bar, pero para que pueda funcionar, alguien debe 
+rellenar su depósito de café usando un bote que está en la despensa.
+
+1. La clase Bote (en Bote.java)
+Esta clase representa el recipiente donde se guarda el café en grano.
+
+Atributos:
+
+String variedad (ej: "Mezcla", "Arábica").
+
+int contenidoActual (cantidad de café en gramos).
+
+Constructor:
+
+public Bote(String variedad, int contenido): Inicializa ambos atributos usando this.
+
+Métodos:
+
+void informe(): Imprime qué variedad de café tiene el bote y cuántos gramos quedan.
+
+2. La clase Cafetera (en Cafetera.java)
+Representa la máquina de café.
+
+Atributos:
+
+int cantidadAgua (ml).
+
+int cantidadCafe (g).
+
+Constructor:
+
+public Cafetera(): Inicializa el agua y el café a 0 (está vacía al comprarla).
+
+Método rellenarAgua(): Pone el atributo cantidadAgua a 2000 ml directamente.
+
+Método clave (Comunicación entre objetos):
+
+public void cargarCafe(Bote boteExterno, int cantidad):
+
+Este método recibe un objeto de la clase Bote y la cantidad que queremos sacar de él.
+
+Lógica: Debe restar la cantidad al contenidoActual del bote y sumársela a la cantidadCafe de la cafetera.
+
+Mensaje: Debe imprimir "Cargando [cantidad]g de café [variedad] en la cafetera...".
+
+Método consultarEstado(): Imprime los niveles actuales de la cafetera.
+
+3. La clase de prueba (en Principal.java)
+En el método main debes realizar las siguientes acciones:
+
+Crea un Bote de café "Arábica" con 1000 gramos.
+
+Crea una Cafetera (nacerá vacía).
+
+Llama al método rellenarAgua() de la cafetera.
+
+Llama al método consultarEstado() de la cafetera para ver que no tiene café.
+
+Uso del parámetro objeto: Llama a miCafetera.cargarCafe(miBote, 250);.
+
+Llama a consultarEstado() de la cafetera para ver que ahora tiene 250g.
+
+Llama al método informe() del bote para comprobar que ahora solo le quedan 750g.

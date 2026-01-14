@@ -1,0 +1,72 @@
+El Reto: Cafetera PRO y Gestión de Suministros
+Contexto: Vamos a mejorar el sistema del bar. Ahora la cafetera no se rellena "mágicamente", 
+sino que necesita que le pasemos un Bote de café. Además, solo trabajaremos con variedades de café específicas 
+usando un enumerado.
+
+1. El Tipo Enumerado (en TipoCafe.java)
+Crea un enum para definir las variedades disponibles en el bar:
+
+Valores: ARABICA, ROBUSTA, MEZCLA, DESCAFEINADO.
+
+2. La clase Bote (en Bote.java)
+Representa el envase de café que tenemos en el almacén.
+
+Atributos:
+
+TipoCafe variedad; (Usa el enum anterior).
+
+int gramosActuales;
+
+Constructor:
+
+public Bote(TipoCafe variedad, int gramos): Inicializa los atributos usando this.
+
+Métodos:
+
+void informeBote(): Imprime el tipo de café y la cantidad que queda en el bote.
+
+3. La clase Cafetera (en Cafetera.java)
+Atributos:
+
+int agua;
+
+int cafe;
+
+TipoCafe tipoEnDeposito; (Para saber qué variedad hay dentro ahora mismo).
+
+Constructor:
+
+public Cafetera(): Inicializa el agua y el café a 0.
+
+Método de interacción (El reto principal):
+
+public void recargarCafe(Bote boteSuministro, int cantidadASacar):
+
+Este método recibe un objeto de tipo Bote y los gramos que queremos trasvasar.
+
+Lógica: Debe restar la cantidad al boteSuministro y sumarla al atributo cafe de la cafetera.
+Además, debe actualizar el tipoEnDeposito de la cafetera con la variedad que trae el bote.
+
+Mensaje: "Recargando cafetera con [cantidad]g de café tipo [variedad]...".
+
+Método hacerCafe():
+
+Resta 20g de café y 200ml de agua.
+
+Si hay suficientes ingredientes, imprime: "Sirviendo una taza de [tipoEnDeposito]". Si no, avisa de qué falta.
+
+4. La clase de prueba (en Principal.java)
+En el método main:
+
+Crea un Bote pasando TipoCafe.ARABICA y 1000 gramos.
+
+Crea una Cafetera.
+
+Llama a un método para llenar el agua de la cafetera (puedes usar un método simple llenarAgua).
+
+Uso de objeto como parámetro: Llama a miCafetera.recargarCafe(miBote, 400);.
+
+Llama a miCafetera.hacerCafe().
+
+Imprime el estado de la Cafetera y del Bote para verificar que los gramos han bajado del bote y 
+subido a la cafetera, y que la variedad se ha asignado correctamente.

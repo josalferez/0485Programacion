@@ -1,0 +1,3 @@
+public enum TipoCafe{
+     ARABICA, ROBUSTA, MEZCLA, DESCAFEINADO;
+}

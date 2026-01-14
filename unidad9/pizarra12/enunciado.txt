@@ -1,0 +1,49 @@
+
+Reto: El Sistema de Comandas de "JavaCoffee"
+1. La Estructura (Herencia)
+Crea una clase base llamada Producto y dos subclases: Bebida y Comida.
+
+Producto: debe tener nombre (String) y precioBase (double).
+
+Bebida: añade el atributo tamano (String: "Pequeño", "Mediano", "Grande").
+
+Comida: añade el atributo tipoPlato (String: "Dulce", "Salado").
+
+2. El Comportamiento Variable (Polimorfismo / @Override)
+Todos los productos se sirven, pero de forma distinta. Crea un 
+método void servir() en la clase padre y sobrescríbelo en las 
+hijas:
+
+En Bebida: Debe imprimir "Sirviendo en vaso [tamano]...".
+
+En Comida: Debe imprimir "Sirviendo en plato de cerámica un producto [tipoPlato]...".
+
+3. Las Opciones de Pago (Sobrecarga / Overloading)
+En la clase clase padre (Producto), crea varias versiones 
+del método calcularPrecio para dar flexibilidad:
+
+calcularPrecio(): Devuelve el precioBase.
+
+calcularPrecio(double descuento): Devuelve el precio aplicando 
+un porcentaje de descuento (ej: 10.0 para 10%).
+
+calcularPrecio(boolean esSocio): Si es socio, aplica 
+automáticamente un 20% de descuento; si no, precio base.
+
+Guion para el alumno (Lo que deben escribir en el Main)
+Pídeles que realicen estas acciones exactas para comprobar que funciona:
+
+Instanciar: Crea un objeto Bebida (Café, 2.0€, Grande) y un 
+objeto Comida (Croissant, 1.5€, Dulce).
+
+Probar Polimorfismo: Crea un Array de tipo Producto que 
+guarde ambos objetos. Recórrelo con un bucle for y llama al método .servir().
+
+Pregunta para el alumno: ¿Por qué si la lista es de "Productos" 
+cada uno se sirve de forma diferente? (Respuesta: Polimorfismo).
+
+Probar Sobrecarga: Elige la bebida y calcula su precio de tres formas 
+distintas usando el mismo nombre de método (calcularPrecio).
+
+Probar Herencia: Intenta acceder al nombre del café desde el objeto
+ Bebida. ¿Está definido en Bebida? No, viene de Producto.

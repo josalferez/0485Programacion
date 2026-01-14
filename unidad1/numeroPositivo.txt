@@ -1,0 +1,8 @@
+public class numeroPositivo {
+	public static void main (String[] args){
+		
+		// Declaro las variables
+		int numero;
+		
+	}
+}

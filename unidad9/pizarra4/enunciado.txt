@@ -1,0 +1,32 @@
+El reto: Gestión de una cuenta bancaria
+Vamos a modelar una cuenta bancaria muy sencilla. Sigue estos pasos sin copiar el código anterior, intentando escribirlo tú desde cero en VS Code.
+
+1. La clase CuentaCorriente
+Crea el archivo CuentaCorriente.java. Debe tener:
+
+Atributos:
+
+String titular
+
+double saldo
+
+Métodos (Comportamientos):
+
+Un método llamado ingresar(double cantidad) que sume el dinero al saldo.
+
+Un método llamado sacar(double cantidad) que reste el dinero al saldo.
+
+Un método llamado mostrarDatos() que imprima el nombre del titular y el saldo actual.
+
+2. La clase de prueba (el main)
+Crea otro archivo (o usa uno existente) con el método main para:
+
+Crear una instancia de CuentaCorriente.
+
+Asignar un nombre al titular y un saldo inicial (por ejemplo, 100€).
+
+Llamar al método ingresar para añadir 50€.
+
+Llamar al método sacar para quitar 20€.
+
+Llamar al método mostrarDatos para ver si el resultado final es 130€.

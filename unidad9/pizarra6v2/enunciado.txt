@@ -1,0 +1,55 @@
+El Reto: El Control de la Veterinaria 🐾
+Contexto: Vamos a gestionar las vacunas de las mascotas. Cada mascota tiene un tipo de especie y una vacuna específica según su tamaño.
+
+1. El Tipo Enumerado (en Especie.java)
+Define las especies que acepta la veterinaria:
+
+Valores: PERRO, GATO, HAMSTER, CONEJO.
+
+2. La Clase Vacuna (en Vacuna.java)
+Representa el vial de medicina que tenemos en la clínica.
+
+Atributos:
+
+String nombreEnfermedad; (Ej: "Rabia", "Gripe Felina").
+
+int mililitrosDisponibles;
+
+Constructor:
+
+public Vacuna(String nombre, int ml): Inicializa los atributos.
+
+Método:
+
+void informeVacuna(): Imprime el nombre de la enfermedad y cuánto líquido queda.
+
+3. La Clase Mascota (en Mascota.java)
+Atributos:
+
+String nombre;
+
+Especie tipo; (Usa el enum).
+
+boolean estaVacunado; (Empieza en false).
+
+Constructor:
+
+public Mascota(String nombre, Especie tipo): Inicializa los atributos. El booleano estaVacunado se pone en false por defecto.
+
+4. La Clase Veterinario (en Veterinario.java)
+Esta clase no tiene atributos, solo acciones (métodos).
+
+Método Principal: * public void vacunar(Mascota mascota, Vacuna vial): * Lógica: 1. Debe restar 10ml al vial. 2. Debe cambiar el atributo estaVacunado de la mascota a true. 3. Imprime: "Vacunando a [nombre] ([especie]) contra [enfermedad]...". * Condición simple: Si el vial tiene menos de 10ml, imprime: "No queda suficiente vacuna".
+
+5. Clase de Prueba (Principal.java)
+En el main:
+
+Crea una Vacuna llamada "Rabia" con 50ml.
+
+Crea una Mascota llamada "Toby" que sea un Especie.PERRO.
+
+Crea un Veterinario.
+
+Llama al método vacunar del veterinario pasando a Toby y la vacuna de Rabia.
+
+Imprime los datos de la mascota y de la vacuna para ver cómo bajaron los ml y cómo cambió el estado de salud de Toby.

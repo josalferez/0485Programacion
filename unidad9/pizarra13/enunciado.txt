@@ -1,0 +1,71 @@
+*********** OJO NO DARLES ESTO  *****************
+Preguntas de autoevaluación para el alumno:
+¿Por qué el método atacar(String arma) no lleva la anotación @Override?
+
+Si creas un Personaje p = new Guerrero("Ragnar", 100), ¿puedes llamar a p.atacar("Espada")? ¿Por qué? (Pista: Mira el tipo de la variable p).
+
+¿Qué pasaría si intentas poner un @Override en el método del Guerrero que recibe un int?
+
+
+
+************ DALES ESTO  **************************************
+Ejercicio: El Simulador de Combate "JavaFantasy"
+Contexto: Estamos desarrollando el motor de un videojuego de rol (RPG). Necesitamos gestionar diferentes tipos de personajes que comparten una base común, pero que actúan de forma distinta en el campo de batalla.
+
+1. La Clase Base (Superclase)
+Crea una clase llamada Personaje.
+
+Atributos:
+
+nombre (String)
+
+vida (int)
+
+Constructor: Debe inicializar ambos atributos.
+
+Método:
+
+public void atacar(): Debe imprimir un mensaje genérico, por ejemplo: "El personaje lanza un golpe básico".
+
+2. Las Clases Especializadas (Subclases y Polimorfismo)
+Crea las clases Guerrero y Mago que hereden de Personaje.
+
+Ambas deben tener su propio constructor que use super.
+
+Polimorfismo: Debes hacer un @Override del método atacar() en cada una:
+
+El Guerrero debe decir que ataca con una espada.
+
+El Mago debe decir que lanza un hechizo de fuego.
+
+3. Habilidades Especiales (Sobrecarga)
+En la clase Guerrero, además del ataque básico, queremos que tenga opciones extra. Implementa Sobrecarga (Overloading) para el método atacar:
+
+atacar(String arma): Imprime que el guerrero ataca usando un arma específica pasada por parámetro.
+
+atacar(int puntosFuerza): Imprime que el guerrero hace un ataque crítico multiplicando el daño por esos puntos de fuerza.
+
+4. El desafío del Main
+Crea una clase Principal con el método main. Debes seguir estos pasos exactos:
+
+Java
+
+public class Principal {
+    public static void main(String[] args) {
+        // 1. Crea un Guerrero llamado "Ragnar" con 100 de vida.
+        // 2. Crea un Mago llamado "Gandalf" con 70 de vida.
+
+        // 3. Demuestra el POLIMORFISMO:
+        // Crea un Array de Personajes donde guardes a Ragnar y a Gandalf.
+        // Recorre el array con un bucle for-each y haz que cada uno llame a atacar().
+        
+        System.out.println("--- Pruebas de Sobrecarga del Guerrero ---");
+        // 4. Demuestra la SOBRECARGA:
+        // Llama al método atacar() del Guerrero de tres formas distintas:
+        // - Sin parámetros (el heredado/sobreescrito).
+        // - Pasándole un nombre de arma (ej: "Hacha vikinga").
+        // - Pasándole un número entero (ej: 50).
+    }
+}
+
+

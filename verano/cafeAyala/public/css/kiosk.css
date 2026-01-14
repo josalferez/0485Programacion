@@ -1,0 +1,202 @@
+:root {
+    --primary: #da291c; /* McDonald's Red-ish */
+    --secondary: #ffc72c; /* McDonald's Yellow-ish */
+    --dark: #27251f;
+    --light: #f4f4f4;
+    --white: #ffffff;
+    --text-color: #292929;
+    --spacing: 1.5rem;
+    --radius: 12px;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--light);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar / Cart */
+.cart-sidebar {
+    width: 320px;
+    background: var(--white);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.05);
+    z-index: 100;
+}
+
+.cart-header {
+    padding: var(--spacing);
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing);
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.cart-footer {
+    padding: var(--spacing);
+    background: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.btn-checkout {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: var(--secondary);
+    color: var(--dark);
+    text-align: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 0.1s;
+}
+
+.btn-checkout:active {
+    transform: scale(0.98);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.category-nav {
+    display: flex;
+    gap: 1rem;
+    padding: var(--spacing);
+    background: white;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.category-pill {
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    background: #eee;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.category-pill.active {
+    background: var(--dark);
+    color: white;
+}
+
+.menu-grid {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing);
+    align-content: start;
+}
+
+.product-card {
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:active {
+    transform: scale(0.96);
+}
+
+.product-image {
+    height: 160px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.product-price {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-top: auto;
+}
+
+/* Utilities */
+.hidden { display: none; }
+
+/* Notification Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+}

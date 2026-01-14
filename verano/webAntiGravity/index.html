@@ -1,0 +1,138 @@
+<!--
+- Usuario: a
+- Contraseña: a
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librería Digital - Gestión de Inventario</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-view" class="glass-container login-container">
+        <header>
+            <h1>Bienvenido</h1>
+            <p>Por favor identifíquese</p>
+        </header>
+        <form id="login-form" onsubmit="event.preventDefault(); login();">
+            <div class="input-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" placeholder="Usuario" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="Contraseña" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px;">Entrar</button>
+        </form>
+    </div>
+
+    <!-- MAIN APP SCREEN (Hidden by default) -->
+    <div id="app-view" class="glass-container hidden">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Librería <span class="accent-text">Digital</span></h1>
+                    <p>Sistema de Gestión de Inventario</p>
+                </div>
+                <button onclick="logout()" class="btn-secondary" style="padding: 5px 15px; font-size: 0.8rem;">Cerrar
+                    Sesión</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="inventory-section">
+                <h2><span class="icon">📚</span> Catálogo Disponible</h2>
+                <div id="inventory-grid" class="inventory-grid">
+                    <!-- Books will be inserted here by JS -->
+                </div>
+            </section>
+
+            <aside class="cart-section glass-panel">
+                <div class="wallet-section glass-panel" style="margin-bottom: 20px;">
+                    <h2><span class="icon">💰</span> Tu Saldo</h2>
+                    <div class="balance-display">
+                        <span id="user-balance">0.00 €</span>
+                    </div>
+                    <button class="btn-primary" onclick="addFunds()" style="width: 100%; margin-top: 10px;">
+                        Recargar Saldo
+                    </button>
+                </div>
+
+                <h2><span class="icon">🛒</span> Tu Carrito</h2>
+                <div class="cart-info">
+                    <p>Items: <span id="cart-count" class="highlight-number">0</span> / 15</p>
+                </div>
+                <div id="cart-items" class="cart-items-list">
+                    <!-- Cart items will appear here -->
+                    <p class="empty-msg">El carrito está vacío</p>
+                </div>
+
+                <div class="cart-actions">
+                    <button id="checkout-btn" class="btn-primary" onclick="procesarVenta()">
+                        Finalizar Compra
+                    </button>
+                    <button id="history-btn" class="btn-secondary" onclick="showHistory()">
+                        Mis Pedidos
+                    </button>
+                    <button id="reset-btn" class="btn-danger" onclick="resetSystem()">
+                        Reiniciar
+                    </button>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Modal for Checkout Receipt -->
+    <div id="receipt-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <h2>--- FACTURA FINAL ---</h2>
+            <div id="receipt-details"></div>
+            <h3>TOTAL A PAGAR: <span id="receipt-total" class="accent-text">0.00 €</span></h3>
+            <button class="btn-primary" onclick="confirmOrder()">Confirmar y Guardar</button>
+            <button class="btn-secondary" onclick="closeModal('receipt-modal')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal for Order History -->
+    <div id="history-modal" class="modal hidden">
+        <div class="modal-content glass-panel" style="max-width: 600px;">
+            <h2>📜 Historial de Pedidos</h2>
+            <div id="history-list" class="history-list"></div>
+            <button class="btn-primary" onclick="closeModal('history-modal')">Cerrar</button>
+            <button class="btn-danger" onclick="clearHistory()">Borrar Historial</button>
+        </div>
+    </div>
+
+    <!-- Modal for QR Recharge -->
+    <div id="qr-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <h2>📲 Escanea para Recargar</h2>
+            <div id="qr-code"
+                style="background: white; padding: 20px; display: inline-block; border-radius: 10px; margin: 20px 0;">
+            </div>
+            <p style="margin-bottom: 20px;">Escanea este código o <a id="qr-link" href="#" target="_blank"
+                    style="color: var(--accent-secondary);">haz click aquí</a> para simular el móvil.</p>
+            <button class="btn-secondary" onclick="closeModal('qr-modal')">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
