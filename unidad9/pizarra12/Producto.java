@@ -28,4 +28,14 @@ public class Producto {
     public String toString() {
         return "Producto [nombre=" + nombre + ", precioBase=" + precioBase + "]";
     }    
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public double getPrecioBase() {
+        return precioBase;
+    }
+
+
 }

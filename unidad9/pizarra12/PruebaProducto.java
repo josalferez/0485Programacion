@@ -15,7 +15,7 @@ public class PruebaProducto {
          * 
          */
 
-        Producto[] arrayProductos = { new Bebida("Café", "Grande", 2.0), new Comida("Croissant", "Dulce", 1.5) };
+        Producto[] arrayProductos = { new Bebida("Mediano", "cafe", 2.0), new Comida("Croissant", "Dulce", 1.5) };
 
         for (Producto p : arrayProductos) {
             p.servir();
@@ -34,7 +34,7 @@ public class PruebaProducto {
         carrito.add(new Bebida("Grande", "Matcha", 2.30));
         
         // Imprimo el arrayList
-        System.out.println("Imprimo el ArrayList la primera vez \n");
+        System.out.println("\n Imprimo el ArrayList la primera vez");
         System.out.println(carrito);
 
         // Añado todos los productos del array estático al dinámico
@@ -43,10 +43,23 @@ public class PruebaProducto {
         }
 
         // Imprimo el arrayList
-        System.out.println("Imprimo el arrayList la segunda vez");
+        System.out.println("\n Imprimo el arrayList la segunda vez");
         System.out.println(carrito);
 
+        // modifico el valor del primer índice del arrayList
+        carrito.set(0, new Bebida("Pequeño", "Té", 1.5)); // Cambia el primer elemento
 
+        // Imprimo el arrayList
+        System.out.println("\n Imprimo el arrayList la tercera vez");
+        System.out.println(carrito);
+
+        // Buscamos si en el arrayList hay una bebida que se llame café
+        for (Producto producto : carrito) {
+            if (producto.getNombre().equals("cafe"))
+                System.out.println("Hay café en el carrito");
+            else   
+                System.out.println("No hay café en el carrito");
+        }
 
     }
 }
