@@ -22,6 +22,10 @@ public class Producto {
 
     public double calcularPrecio(boolean esSocio) {
         return (esSocio) ? this.precioBase - (0.2 * precioBase) : precioBase;
-    }    
+    }
 
+    @Override
+    public String toString() {
+        return "Producto [nombre=" + nombre + ", precioBase=" + precioBase + "]";
+    }    
 }
