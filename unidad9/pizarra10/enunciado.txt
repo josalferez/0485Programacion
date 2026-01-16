@@ -1,43 +1,32 @@
-Llegamos a uno de los puntos más interesantes del Tema 9 (Sección 9.7). Hasta ahora, tus alumnos han trabajado con 
-una cafetera o un bote de forma individual. Sin embargo, en la vida real (y en las aplicaciones profesionales),
- solemos gestionar colecciones de objetos.
+El Reto: El Taller de Neumáticos (Arrays de Objetos)
+Contexto: Trabajamos en un taller mecánico. Tenemos una estantería 
+con varios neumáticos y debemos revisar cuáles están bajos de aire para
+ inflarlos antes de montarlos en los coches.
 
-Vamos a crear una "Cafetería" que gestiona un almacén de botes utilizando un array de objetos.
+1. El Tipo Enumerado (TipoNeumatico.java)
+Define las categorías de neumáticos disponibles: VERANO, INVIERNO, ALL_SEASON, OFF_ROAD.
 
-El Reto: El Almacén de la Cafetería (Arrays de Objetos)
-Contexto: Nuestra cafetería ha crecido y ahora tenemos una estantería donde guardamos varios botes de café. 
-Debemos ser capaces de revisar todos los botes para saber cuál necesita reposición.
+2. La clase Neumatico (Neumatico.java)
+Atributos: TipoNeumatico tipo, double psi (libras por pulgada cuadrada).
 
-1. El Tipo Enumerado (en TipoCafe.java)
-(Mantenemos el mismo): ARABICA, ROBUSTA, MEZCLA, DESCAFEINADO.
+Constructor: public Neumatico(TipoNeumatico tipo, int psi).
 
-2. La clase Bote (en Bote.java)
-Atributos: TipoCafe variedad, int gramos.
+Método mostrarEstado(): Imprime "[Tipo] - Presión actual: [psi] PSI".
 
-Constructor: public Bote(TipoCafe variedad, int gramos).
+3. La clase de prueba GestionTaller.java
+Es aquí donde gestionaremos el inventario:
 
-Método mostrarInfo(): Imprime "[Variedad] - Quedan [gramos]g".
+Crear el Array: Declarar un array para 3 neumáticos. Neumatico[] inventario = new Neumatico[3];
 
-3. La clase de prueba GestionAlmacen (en GestionAlmacen.java)
-Aquí es donde aplicaremos el Array de Objetos.
+Instanciar los objetos:
 
-En el main, los alumnos deben:
+inventario[0] = new Neumatico(TipoNeumatico.VERANO, 32);
 
-Crear el Array: Declarar un array capaz de guardar 3 objetos de tipo Bote. Bote[] estanteria = new Bote[3];
+inventario[1] = new Neumatico(TipoNeumatico.INVIERNO, 15); (¡Este está muy bajo!)
 
-Instanciar los objetos dentro del array:
+inventario[2] = new Neumatico(TipoNeumatico.OFF_ROAD, 30);
 
-estanteria[0] = new Bote(TipoCafe.ARABICA, 500);
+Recorrer el array: Usar un bucle para ejecutar mostrarEstado() en cada elemento.
 
-estanteria[1] = new Bote(TipoCafe.ROBUSTA, 150);
-
-estanteria[2] = new Bote(TipoCafe.DESCAFEINADO, 800);
-
-Recorrer el array (Bucle For):
-
-Usar un bucle para llamar al método mostrarInfo() de cada bote.
-
-Lógica de búsqueda (El Reto):
-
-Los alumnos deben crear un bucle que recorra el array y muestre un mensaje de "¡REPOSICIÓN URGENTE!" solo 
-para aquellos botes que tengan menos de 200 gramos.
+Lógica de búsqueda (El Reto): Crear un bucle que recorra el array y muestre el mensaje
+ "¡ALERTA: PRESIÓN CRÍTICA! Necesita inflado" solo para los neumáticos que tengan menos de 20 PSI.
