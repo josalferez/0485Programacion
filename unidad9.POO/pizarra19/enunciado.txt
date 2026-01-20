@@ -1,0 +1,174 @@
+
+# 🧪 PRÁCTICA DE PROGRAMACIÓN EN JAVA
+
+## Gestión de una Liga de Videojuegos
+
+### 📌 Instrucciones generales
+
+* Usa `ArrayList` para la gestión de colecciones.
+* Todos los atributos deben ser **private**.
+* El programa debe ejecutarse desde una clase `Main`.
+
+---
+
+## 🧩 CONTEXTO GENERAL
+
+Se desea desarrollar un sistema de gestión para una **liga de videojuegos** en la que participan distintos tipos de jugadores.
+Cada jugador tiene un rol, estadísticas y un comportamiento común, pero existen diferencias según su tipo.
+
+---
+
+## 1️⃣ ENUM – Rol del jugador
+
+Crea un `enum` llamado **RolJugador** con **únicamente** los siguientes valores:
+
+* `DPS`
+* `TANQUE`
+* `SOPORTE`
+
+---
+
+## 2️⃣ INTERFAZ – Competidor
+
+Crea una **interfaz** llamada `Competidor` con los siguientes métodos:
+
+* `int calcularPuntuacion()`
+* `boolean esProfesional()`
+
+---
+
+## 3️⃣ CLASE ABSTRACTA – Jugador
+
+Crea una **clase abstracta** llamada `Jugador` que:
+
+### Atributos privados:
+
+* `String nombre`
+* `RolJugador rol`
+* `int nivel`
+* `int partidasJugadas`
+
+### Requisitos:
+
+* Constructor con todos los atributos
+* Getters y setters
+* Implementa la interfaz `Competidor`
+* Declara un método abstracto: public abstract void entrenar();
+
+
+### Métodos:
+
+* Sobrecarga el método `toString()` para mostrar toda la información del jugador.
+* Sobrecarga `equals()` y `hashCode()`:
+
+  * Dos jugadores son iguales si su **nombre coincide ignorando mayúsculas/minúsculas** (`equalsIgnoreCase`) y tienen el mismo rol.
+* Implementa `calcularPuntuacion()` de forma genérica:  nivel * partidasJugadas
+
+---
+
+## 4️⃣ HERENCIA Y POLIMORFISMO
+
+Crea dos clases hijas:
+
+### 🔹 JugadorAmateur
+
+* Añade el atributo:
+
+  * `boolean juegaPorDiversion`
+* Implementa `entrenar()`:
+
+  * Aumenta el nivel en 1
+* Implementa `esProfesional()` devolviendo `false`
+* Sobrescribe `calcularPuntuacion()`: Devuelve la puntuación base + 10
+
+---
+
+### 🔹 JugadorProfesional
+
+* Añade el atributo:
+
+  * `double salario`
+* Implementa `entrenar()`: Aumenta el nivel en 2
+* Implementa `esProfesional()` devolviendo `true`
+* Sobrescribe `calcularPuntuacion()`: Devuelve la puntuación base + 50
+
+---
+
+## 5️⃣ ARRAYLIST DE OBJETOS
+
+En la clase `Main`:
+
+1. Crea un `ArrayList<Jugador>` llamado `liga`.
+
+2. Añade al menos:
+
+   * 2 jugadores amateur
+   * 2 jugadores profesionales
+     *(usa `add`)*
+
+3. Muestra:
+
+   * El tamaño de la lista (`size`)
+   * Todos los jugadores usando un `foreach`
+
+---
+
+## 6️⃣ instanceof y POLIMORFISMO
+
+En un recorrido `foreach` de la lista:
+
+* Comprueba con `instanceof` si el jugador es `JugadorProfesional`
+* Si lo es:
+
+  * Llama a su método `entrenar()`
+* Si no:
+
+  * Muestra un mensaje indicando que es amateur
+
+---
+
+## 7️⃣ COMPARACIÓN DE OBJETOS EN FOREACH (OBLIGATORIO)
+
+En **otro `foreach`**, realiza lo siguiente:
+
+* Guarda una referencia al **jugador anterior**
+* Para cada jugador actual:
+
+  * Compáralo con el anterior usando `equals()`
+  * Si son iguales, muestra un mensaje indicando que hay un duplicado
+* El primer jugador no se compara
+
+---
+
+## 8️⃣ OPERACIONES CON ARRAYLIST
+
+Implementa las siguientes operaciones:
+
+1. Comprueba si la lista contiene un jugador concreto (`contains`)
+2. Modifica un jugador existente usando `set`
+3. Obtén un jugador por posición usando `get`
+4. Elimina jugadores amateur usando: removeIf(...)
+5. Muestra la lista final tras las eliminaciones
+
+---
+
+## 9️⃣ SOBRECARGA DE MÉTODOS
+
+En la clase `Jugador`, sobrecarga un método llamado `subirNivel`:
+
+* `subirNivel()`: sube 1 nivel
+* `subirNivel(int cantidad)`: sube tantos niveles como se indique
+
+Utiliza ambos métodos en el `Main`.
+
+---
+
+## 🔟 SALIDA FINAL
+
+El programa debe mostrar:
+
+* Estado inicial de la liga
+* Cambios tras entrenamientos
+* Detección de jugadores duplicados
+* Lista final tras eliminaciones
+

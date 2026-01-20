@@ -8,7 +8,8 @@ Crea una clase abstracta Componente:
 
 Atributos: String modelo, String numeroSerie (tu clave única), double precioBase.
 
-Método Abstracto: void imprimirDetalles(). Cada componente se muestra de forma distinta.
+Método Abstracto: void imprimirDetalles(). Cada componente se muestra de forma 
+distinta.
 
 Método equals y hashCode: Implementalo con vs code
 
@@ -19,17 +20,23 @@ Procesador: Añade int numNucleos.
 
 DiscoDuro: Añade int capacidadGB.
 
-💡 El truco para evitar instanceof: Al sobreescribir imprimirDetalles() en cada hija, cuando recorras la lista, 
-cada objeto sabrá qué decir de sí mismo sin que tú tengas que preguntar "¿Eres un Procesador?".
+💡 El truco para evitar instanceof: Al sobreescribir imprimirDetalles() 
+en cada hija, cuando recorras la lista, 
+cada objeto sabrá qué decir de sí mismo sin que tú tengas que preguntar 
+"¿Eres un Procesador?".
 
 3. La Colección (ArrayList)
 En tu clase Main:
 
 Crea un ArrayList<Componente> stock.
 
-Validación de duplicados: Antes de añadir un componente, usa stock.contains(nuevo) para avisar si el producto ya existe (esto probará tu equals).
+Validación de duplicados: Antes de añadir un componente, usa 
+stock.contains(nuevo) para avisar si el producto 
+ya existe (esto probará tu equals).
 
-Comparación secuencial: Recorre el ArrayList con un bucle for (el de índice i) y compara si un componente es igual al siguiente. Si lo son, imprime un aviso.
+Comparación secuencial: Recorre el ArrayList con un bucle for 
+(el de índice i) y compara si un componente es igual al siguiente. 
+Si lo son, imprime un aviso.
 
 Recorrido Final: Usa un foreach para llamar a imprimirDetalles() de todos los productos. Aquí verás el polimorfismo en acción: cada uno imprimirá sus propios atributos (núcleos o capacidad) sin usar instanceof.
 
@@ -41,3 +48,5 @@ Crear un Procesador con serie "ABC-123".
 Crear un DiscoDuro con serie "ABC-123".
 
 Si hacen procesador.equals(disco), debe dar FALSE (porque aunque el número de serie coincida, las clases son distintas). Esto es lo que logramos con el getClass() != obj.getClass() que vimos antes.
+
+
