@@ -1,177 +1,103 @@
-# 🧪 PRÁCTICA DE PROGRAMACIÓN EN JAVA
+# 🧪 PRÁCTICA DE PROGRAMACIÓN EN JAVA 
 
 ## Gestión de un Torneo de Robots de Combate
 
-### 📌 Instrucciones generales
-
-* Usa `ArrayList` para la gestión de colecciones.
-* Todos los atributos deben ser **private**.
-* El programa debe ejecutarse desde una clase `Main`.
-
----
-
-## 🧩 CONTEXTO GENERAL
-
-Se desea desarrollar un sistema de gestión para un **torneo de robots de combate**.
-Cada robot tiene una función dentro del equipo, unas estadísticas comunes y un comportamiento base,
- pero existen diferencias según si el robot es de **entrenamiento** o de **competición profesional**.
+### 📌 OBJETIVO GENERAL
+Crear una aplicación de gestión para un torneo de robots que permita 
+administrar participantes, 
+sus estadísticas y realizar mantenimientos de la lista mediante un 
+menú interactivo.
 
 ---
 
-## 1️⃣ ENUM – Tipo de robot
+## 🏗️ 1. ESTRUCTURA DE CLASES (MODELO)
 
-Crea un `enum` llamado **TipoRobot** con **únicamente** los siguientes valores:
-
+### 🔹 1.1 Enumerado: `TipoRobot`
+Valores: 
 * `ATAQUE`
 * `DEFENSA`
 * `SOPORTE`
 
----
-
-## 2️⃣ INTERFAZ – Competidor
-
-Crea una **interfaz** llamada `Competidor` con los siguientes métodos:
-
+### 🔹 1.2 Interfaz: `Competidor`
+Crea una **interfaz** con los siguientes métodos:
 * `int calcularPuntuacion()`
 * `boolean esProfesional()`
 
----
+### 🔹 1.3 Clase Abstracta: `Robot`
+* **Comportamiento**: Implementa la interfaz `Competidor`.
+* **Atributos privados**: `id` (String), `tipo` (TipoRobot), `nivel` (int),
+ `combatesRealizados` (int).
 
-## 3️⃣ CLASE ABSTRACTA – Robot
+#### Métodos:
+* **Constructor**, Getters y Setters.
+* `abstract void actualizarSoftware()`
+* `toString()`: Sobrescrito para mostrar toda la información.
+* `equals() y hashCode()`: Dos robots son iguales si tienen el mismo **id** (ignora mayúsculas) y **tipo**.
 
-Crea una **clase abstracta** llamada `Robot` que:
+#### Implementación de Competidor:
+* `calcularPuntuacion()`: Devuelve `nivel * combatesRealizados`.
 
-### Atributos privados:
+#### Sobrecarga de Métodos:
+* `public void mejorarNivel()`: Incrementa nivel en 1.
+* `public void mejorarNivel(int cantidad)`: Incrementa nivel en `cantidad`.
 
-* `String id`
-* `TipoRobot tipo`
-* `int nivel`
-* `int combatesRealizados`
+### 🔹 1.4 Clases Concretas que heredan de Robot
 
-### Requisitos:
+#### **`RobotEntrenamiento`**
+* **Atributo extra**: `boolean usoEducativo`.
+* `actualizarSoftware()`: Nivel + 1. 
+* `esProfesional()`: Devuelve `false`.
+* `calcularPuntuacion()`: Sobrescribe para devolver **Base + 10**.
 
-* Constructor con todos los atributos
-* Getters y setters
-* Implementa la interfaz `Competidor`
-* Declara un método abstracto: public abstract void actualizarSoftware();
-  ```
-
-### Métodos:
-
-* Sobrecarga el método `toString()` para mostrar toda la información del robot.
-* Sobrecarga `equals()` y `hashCode()`:
-
-  * Dos robots son iguales si su **id coincide ignorando mayúsculas/minúsculas** (`equalsIgnoreCase`) y tienen el mismo tipo.
-* Implementa `calcularPuntuacion()` de forma genérica: nivel * combatesRealizados
-  ```
-
----
-
-## 4️⃣ HERENCIA Y POLIMORFISMO
-
-Crea dos clases hijas:
-
-### 🔹 RobotEntrenamiento
-
-* Añade el atributo:
-
-  * `boolean usoEducativo`
-* Implementa `actualizarSoftware()`:
-
-  * Aumenta el nivel en 1
-* Implementa `esProfesional()` devolviendo `false`
-* Sobrescribe `calcularPuntuacion()`: Devuelve la puntuación base + 10
+#### **`RobotCompeticion`**
+* **Atributo extra**: `double presupuesto`.
+* `actualizarSoftware()`: Nivel + 2. 
+* `esProfesional()`: Devuelve `true`.
+* `calcularPuntuacion()`: Sobrescribe para devolver **Base + 50**.
 
 ---
 
-### 🔹 RobotCompeticion
+## 🎮 2. CLASE PRINCIPAL (`PruebaRobot.java`)
 
-* Añade el atributo:
+El programa debe basarse en un único **MENÚ INTERACTIVO** que englobe 
+todas las funcionalidades. 
+Al iniciar, el programa crea una lista `ArrayList<Robot>` que se llama 
+torneo vacía.
 
-  * `double presupuesto`
-* Implementa `actualizarSoftware()`: Aumenta el nivel en 2
-* Implementa `esProfesional()` devolviendo `true`
-* Sobrescribe `calcularPuntuacion()`: Devuelve la puntuación base + 50
+### 📋 Menú de Opciones:
 
----
+#### **1️⃣ Cargar Datos de Prueba**
+* Limpia la lista actual.
+* Añade automáticamente **2 robots de Entrenamiento** y **2 de Competición** predefinidos.
+* Muestra cuántos robots hay en el torneo (`size`).
 
-## 5️⃣ ARRAYLIST DE OBJETOS
+#### **2️⃣ Listar Robots**
+* Recorre la lista (`foreach`) y muestra cada robot.
 
-En la clase `Main`:
+#### **3️⃣ Actualizar Software (Polimorfismo + instanceof)**
+* Recorre la lista.
+* Si el robot es **de Competición** (`instanceof`), ejecuta su método
+ `actualizarSoftware()` y avisa por consola.
+* Si es **de Entrenamiento**, imprime un mensaje indicando que no se actualiza en esta fase.
 
-1. Crea un `ArrayList<Robot>` llamado `torneo`.
+#### **4️⃣ Gestión Individual (Get/Set/Sobrecarga)**
+Permite elegir una sub-acción:
+* **Modificar (Set)**: Pide posición y cambia el robot por uno nuevo (pide datos básicos).
+* **Consultar (Get)**: Pide posición y muestra datos.
+* **Mejora Personalizada (Sobrecarga)**: Pide posición de un robot. Pregunta si quiere subir 1 nivel (llama a `mejorarNivel()`) o varios (pide cantidad y llama a `mejorarNivel(int)`).
 
-2. Añade al menos:
+#### **5️⃣ Búsqueda y Duplicados (Contains + Equals)**
+* **Buscar**: Pide un ID y Tipo, crea un robot temporal y usa `contains` para comprobar si existe.
+* **Informe de Duplicados**: Usa **bucles anidados** para comparar todos contra todos. Si encuentra dos robots iguales (según `equals`), imprime: "⚠️ ALERTA: Robot [ID] está duplicado".
 
-   * 2 robots de entrenamiento
-   * 2 robots de competición
-     *(usa `add`)*
+#### **6️⃣ Mantenimiento de Torneo (RemoveIf)**
+* Elimina de la lista a todos los robots que **NO** sean profesionales (es decir, elimina los de entrenamiento).
+* Muestra mensaje confirmando cuántos quedan.
 
-3. Muestra:
-
-   * El tamaño de la lista (`size`)
-   * Todos los robots usando un `foreach`
-
----
-
-## 6️⃣ instanceof y POLIMORFISMO
-
-En un recorrido `foreach` de la lista:
-
-* Comprueba con `instanceof` si el robot es `RobotCompeticion`
-* Si lo es:
-
-  * Llama a su método `actualizarSoftware()`
-* Si no:
-
-  * Muestra un mensaje indicando que es un robot de entrenamiento
+#### **0️⃣ Salir**
+* Termina la ejecución del programa.
 
 ---
 
-## 7️⃣ COMPARACIÓN DE OBJETOS EN FOREACH (OBLIGATORIO)
-
-En **otro `foreach`**, realiza lo siguiente:
-
-* Guarda una referencia al **robot anterior**
-* Para cada robot actual:
-
-  * Compáralo con el anterior usando `equals()`
-  * Si son iguales, muestra un mensaje indicando que hay un robot duplicado
-* El primer robot no se compara
-
----
-
-## 8️⃣ OPERACIONES CON ARRAYLIST
-
-Implementa las siguientes operaciones:
-
-1. Comprueba si la lista contiene un robot concreto (`contains`)
-2. Modifica un robot existente usando `set`
-3. Obtén un robot por posición usando `get`
-4. Elimina robots de entrenamiento usando: removeIf(...)
-   ```
-5. Muestra la lista final tras las eliminaciones
-
----
-
-## 9️⃣ SOBRECARGA DE MÉTODOS
-
-En la clase `Robot`, sobrecarga un método llamado `mejorarNivel`:
-
-* `mejorarNivel()`: sube 1 nivel
-* `mejorarNivel(int cantidad)`: sube tantos niveles como se indique
-
-Utiliza ambos métodos en el `Main`.
-
----
-
-## 🔟 SALIDA FINAL
-
-El programa debe mostrar:
-
-* Estado inicial del torneo
-* Cambios tras las actualizaciones de software
-* Detección de robots duplicados
-* Lista final tras eliminaciones
-
-
+### 💡 Justificación del Diseño
+Esta estructura integra todos los conceptos (colecciones, lógica de bucles, interacción de usuario, POO) en un flujo de trabajo coherente, evitando bloques de código sueltos "antes" o "después" del menú principal.
