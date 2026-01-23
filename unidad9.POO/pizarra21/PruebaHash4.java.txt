@@ -1,0 +1,55 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class PruebaHash4 {
+    public static void main(String[] args) {
+        HashMap<String, Vehiculo> lista = new HashMap<>();
+
+        lista.put("123ABC", new Coche("123ABC", "Toyota"));
+        lista.put("456DEF", new Moto("456DEF", "Honda"));
+
+        System.out.println("En el taller hay " + lista.size() + " vehículos. ");
+        System.out.println("Los listo: ");
+
+        for (Map.Entry<String, Vehiculo> v : lista.entrySet()) {
+            Vehiculo vehiculo = v.getValue();
+
+            vehiculo.arrancar();
+
+            if (vehiculo instanceof Moto miMoto) {
+                miMoto.hacerCaballito();
+            }
+
+            System.out.println("La/El " + vehiculo.getClass().getSimpleName() + " tiene matrícula: " + v.getKey());
+        }
+
+        // Arrancamos sololos coches, modificamos valores y eliminamos vehiuclo con
+        // matricula 456
+        for (Map.Entry<String, Vehiculo> v : lista.entrySet()) {
+            Vehiculo vehiculo = v.getValue();
+
+            if (vehiculo instanceof Coche miCoche) {
+                miCoche.arrancar();
+            }
+
+            if (vehiculo.getMarca().equals("Toyota")) {
+                vehiculo.setMarca("Toyota Sport");
+            }
+        }
+
+        lista.keySet().removeIf(p-> p.toString().startsWith("456"));
+
+        // imprimo otra vez el diccionario
+        System.out.println("En el taller hay " + lista.size() + " vehículos. ");
+        System.out.println("Los listo: ");
+        for (Map.Entry<String, Vehiculo> v : lista.entrySet()) {
+            Vehiculo vehiculo = v.getValue();
+            System.out.println("La/El " + vehiculo.getClass().getSimpleName() + " tiene matrícula: " + v.getKey() 
+            + " y nombre: " + vehiculo.getMarca());
+        }
+
+        // Arranco todos los vehículos sin foreach
+        System.out.println("Arranco todos los vehículos sin foreach");
+        lista.values().forEach(p->p.arrancar());
+    }
+}

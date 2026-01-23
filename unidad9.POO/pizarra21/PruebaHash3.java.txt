@@ -1,0 +1,96 @@
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class PruebaHash {
+    public static void main(String[] args) {
+        // Creo un diccinario HashMap de Vehículos
+        HashMap<Integer, Vehiculo> listaReparar = new HashMap<>();
+
+        listaReparar.put(1, new Coche("2058BAA", "Toyota"));
+        listaReparar.put(2, new Moto("3169CBB", "Yamaha"));
+        listaReparar.put(3, new Coche("4270DCC", "Honda"));
+        listaReparar.put(4, new Moto("5381EDD", "Kawasaki"));
+        listaReparar.put(5, new Moto("6492FEE", "Ducati"));
+        listaReparar.put(6, new Coche("7503GFF", "Volkswagen"));
+        listaReparar.put(7, new Coche("8614HGG", "BMW"));
+        listaReparar.put(8, new Moto("9725IHH", "Suzuki"));
+        listaReparar.put(9, new Coche("0836JII", "Mercedes"));
+        listaReparar.put(10, new Moto("1947KJJ", "KTM"));
+        listaReparar.put(11, new Coche("2058LKK", "Renault"));
+
+        // 1. Mostramos datos de los Vehiculos
+        for (Map.Entry<Integer, Vehiculo> v : listaReparar.entrySet()) {
+            Vehiculo vehi = v.getValue();
+            vehi.arrancar();
+        }
+
+        // también podemos hacer así:
+        System.out.println("");
+        for (Map.Entry<Integer, Vehiculo> v : listaReparar.entrySet()) {
+            v.getValue().arrancar();
+        }
+
+        // O incluso usando Lambda
+        System.out.println("");
+        listaReparar.values().forEach(p -> p.arrancar());
+
+        // 2. Acceso directo al vehículo 5
+        System.out.println("\nAcceso directo al vehículo 5");
+        listaReparar.get(5).mostrarDatos();
+
+        // 3. Comprobamos si existe la key 1 en el taller.
+        System.out.println("\nComprobamos si existe la key 1 en el taller.");
+        if (listaReparar.containsKey(1))
+            System.out.println("El vehiculo 1 existe");
+
+        // 4. Eliminamos un par key value por su key (3)
+        System.out.println("\nEliminamos un par key value por su key (3)");
+        listaReparar.remove(3);
+
+        // 5. Gestión de tamaño y vaciado
+        System.out.println("\nGestión de tamaño y vaciado");
+        System.out.println("La lista tiene un tamñao de: " + listaReparar.size());
+        listaReparar.clear();
+        listaReparar.values().forEach(p -> p.mostrarDatos());
+
+        // Vuelvo a llenar la lista
+        listaReparar.put(1, new Coche("2058BAA", "Toyota"));
+        listaReparar.put(2, new Moto("3169CBB", "Yamaha"));
+        listaReparar.put(3, new Coche("4270DCC", "Honda"));
+        listaReparar.put(4, new Moto("5381EDD", "Kawasaki"));
+        listaReparar.put(5, new Moto("6492FEE", "Ducati"));
+        listaReparar.put(6, new Coche("7503GFF", "Volkswagen"));
+        listaReparar.put(7, new Coche("8614HGG", "BMW"));
+        listaReparar.put(8, new Moto("9725IHH", "Suzuki"));
+        listaReparar.put(9, new Coche("0836JII", "Mercedes"));
+        listaReparar.put(10, new Moto("1947KJJ", "KTM"));
+        listaReparar.put(11, new Coche("2058LKK", "Renault"));
+
+        // 6. obtención de vistas
+        // Busca en listaReparar si existe la clave 10, si existe imprimes
+        // el vehículo y si no dices que no existe.
+        if (listaReparar.containsKey(10)) {
+            listaReparar.get(10).arrancar();
+        } else {
+            System.out.println("El vehículo no está en el taller");
+        }
+
+        // 7. modificamos los datos de un vehículo
+        // Poco eficiente aunque se entiende
+        if (listaReparar.containsKey(5)) {
+            listaReparar.get(5).setMatricula("0820GHV");
+            System.out.println("Matrícula actualizada.");
+        } else {
+            System.out.println("El vehículo no está en el taller");
+        }
+        // Más eficiente y moderno. Aconsejo usar este
+        Vehiculo v = listaReparar.get(5);
+        if (v != null) {
+            v.setMatricula("0810GHV");
+            System.out.println("Matrícula actualizada.");
+        }
+
+        // CRUD sobre ArrayList completo
+    }
+}
