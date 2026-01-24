@@ -1,4 +1,3 @@
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +6,9 @@ public class PruebaHash {
         // Creo un diccinario HashMap de Vehículos
         HashMap<Integer, Vehiculo> listaReparar = new HashMap<>();
 
+        // Vamos a implementar CRUD del diccionario
+
+        // 1. Create
         listaReparar.put(1, new Coche("2058BAA", "Toyota"));
         listaReparar.put(2, new Moto("3169CBB", "Yamaha"));
         listaReparar.put(3, new Coche("4270DCC", "Honda"));
@@ -19,42 +21,43 @@ public class PruebaHash {
         listaReparar.put(10, new Moto("1947KJJ", "KTM"));
         listaReparar.put(11, new Coche("2058LKK", "Renault"));
 
-        // 1. Mostramos datos de los Vehiculos
-        for (Map.Entry<Integer, Vehiculo> v : listaReparar.entrySet()) {
-            Vehiculo vehi = v.getValue();
-            vehi.arrancar();
+        // 2. Read
+        for (Map.Entry<Integer, Vehiculo> en : listaReparar.entrySet()) {
+            Integer key = en.getKey();
+            Vehiculo val = en.getValue();
+
+            val.mostrarDatos();
         }
 
-        // también podemos hacer así:
-        System.out.println("");
-        for (Map.Entry<Integer, Vehiculo> v : listaReparar.entrySet()) {
-            v.getValue().arrancar();
-        }
+        // ó Lambda
+        listaReparar.values().forEach(v -> v.mostrarDatos());
 
-        // O incluso usando Lambda
-        System.out.println("");
-        listaReparar.values().forEach(p -> p.arrancar());
-
-        // 2. Acceso directo al vehículo 5
-        System.out.println("\nAcceso directo al vehículo 5");
+        // 2. Muestro los datos del vehículo 5
         listaReparar.get(5).mostrarDatos();
+        System.out.println(listaReparar.get(5));
 
-        // 3. Comprobamos si existe la key 1 en el taller.
-        System.out.println("\nComprobamos si existe la key 1 en el taller.");
-        if (listaReparar.containsKey(1))
-            System.out.println("El vehiculo 1 existe");
+        // 3. Comprobamos si existe la key 3 en el taller y devolvemos un mensaje.
+        if (listaReparar.containsKey(3)) {
+            System.out.println("El vehiculo existe.");
+        } else {
+            System.out.println("El vehículo no existe.");
+        }
 
-        // 4. Eliminamos un par key value por su key (3)
-        System.out.println("\nEliminamos un par key value por su key (3)");
+        // 4. Eliminamos el par key value para la key 3
+        // mostramos los datos para ver que el key 3 no está
         listaReparar.remove(3);
-
-        // 5. Gestión de tamaño y vaciado
-        System.out.println("\nGestión de tamaño y vaciado");
-        System.out.println("La lista tiene un tamñao de: " + listaReparar.size());
-        listaReparar.clear();
         listaReparar.values().forEach(p -> p.mostrarDatos());
 
-        // Vuelvo a llenar la lista
+        // 5. Size, clear y mostrarDatos
+        System.out.println("\nEl tamaño del diccionario es: " + listaReparar.size());
+        System.out.println("Borro el diccionario");
+        listaReparar.clear();
+        listaReparar.values().forEach(p -> p.mostrarDatos());
+        System.out.println("\nEl tamaño del diccionario es: " + listaReparar.size());
+
+        // 6. Obtención de vistas
+        // Busca en listaReparar si existe el key 10, si existe imprimes
+        // el vehículo y si no dices que no existe.
         listaReparar.put(1, new Coche("2058BAA", "Toyota"));
         listaReparar.put(2, new Moto("3169CBB", "Yamaha"));
         listaReparar.put(3, new Coche("4270DCC", "Honda"));
@@ -67,30 +70,31 @@ public class PruebaHash {
         listaReparar.put(10, new Moto("1947KJJ", "KTM"));
         listaReparar.put(11, new Coche("2058LKK", "Renault"));
 
-        // 6. obtención de vistas
-        // Busca en listaReparar si existe la clave 10, si existe imprimes
-        // el vehículo y si no dices que no existe.
         if (listaReparar.containsKey(10)) {
-            listaReparar.get(10).arrancar();
+            listaReparar.get(10).mostrarDatos();
         } else {
-            System.out.println("El vehículo no está en el taller");
+            System.out.println("No existe el vehículo");
         }
 
-        // 7. modificamos los datos de un vehículo
-        // Poco eficiente aunque se entiende
+        // ó
+
+        listaReparar.getOrDefault(100, new Vehiculo("null", "null")).mostrarDatos();
+
+        // Le cambiamos la matrícula al vehículo 5
         if (listaReparar.containsKey(5)) {
-            listaReparar.get(5).setMatricula("0820GHV");
-            System.out.println("Matrícula actualizada.");
+            listaReparar.get(5).setMatricula("254abc");
         } else {
-            System.out.println("El vehículo no está en el taller");
+            System.out.println("El vehiculo 5 no existe en el stock");
         }
-        // Más eficiente y moderno. Aconsejo usar este
+        
+        // ó
+
         Vehiculo v = listaReparar.get(5);
         if (v != null) {
             v.setMatricula("0810GHV");
             System.out.println("Matrícula actualizada.");
         }
+        
 
-        // CRUD sobre Diccionarios completo
     }
 }
