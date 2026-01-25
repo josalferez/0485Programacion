@@ -1,3 +1,4 @@
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class PruebaHash {
         } else {
             System.out.println("El vehiculo 5 no existe en el stock");
         }
-        
+
         // ó
 
         Vehiculo v = listaReparar.get(5);
@@ -94,7 +95,5 @@ public class PruebaHash {
             v.setMatricula("0810GHV");
             System.out.println("Matrícula actualizada.");
         }
-        
-
     }
 }
