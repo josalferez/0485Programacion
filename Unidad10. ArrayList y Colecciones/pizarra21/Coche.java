@@ -18,6 +18,4 @@ public class Coche extends Vehiculo {
     public void parar() {
         System.out.println("El coche se para");
     }
-
-    
 }

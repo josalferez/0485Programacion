@@ -13,8 +13,8 @@ public class pizarra4T10 {
         nombres.add("Alejandro");
 
         // ¿Cómo completarías esta línea?
-        nombres.removeIf( nombre -> nombre.length() == 4);
-        Collections.sort(nombres);
+        nombres.removeIf( nombre -> nombre.length() == 4); // Lamnbda que elimina nombres de 4 letras
+        Collections.sort(nombres); // Ordena la lista alfabéticamente
 
         System.out.println(nombres); // Debería quedar: [Alejandro, Pedro]
     }
