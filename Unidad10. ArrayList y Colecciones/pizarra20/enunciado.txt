@@ -25,7 +25,8 @@ Crea una **interfaz** con los siguientes métodos:
 
 ### 🔹 1.3 Clase Abstracta: `Robot`
 * **Comportamiento**: Implementa la interfaz `Competidor`.
-* **Atributos privados**: `id` (String), `tipo` (TipoRobot), `nivel` (int),
+* **Atributos privados**: `id` (String), `tipo` (TipoRobot), 
+`nivel` (int),
  `combatesRealizados` (int).
 
 #### Métodos:
@@ -61,38 +62,92 @@ Crea una **interfaz** con los siguientes métodos:
 
 El programa debe basarse en un único **MENÚ INTERACTIVO** que englobe 
 todas las funcionalidades. 
-Al iniciar, el programa crea una lista `ArrayList<Robot>` que se llama 
-torneo vacía.
+Al iniciar, el programa inserta **10 robots aleatorios** en un `HashMap<String, Robot>` 
+que se llama `torneo`, donde la clave es el ID único del robot.
 
-### 📋 Menú de Opciones:
+### 🤖 Generación Inicial de Robots
 
-#### **1️⃣ Cargar Datos de Prueba**
-* Limpia la lista actual.
-* Añade automáticamente **2 robots de Entrenamiento** y **2 de Competición** predefinidos.
-* Muestra cuántos robots hay en el torneo (`size`).
+#### 📝 Código para cargar los 10 robots iniciales:
+```java
+HashMap<String, Robot> torneo = new HashMap<>();
 
-#### **2️⃣ Listar Robots**
-* Recorre la lista (`foreach`) y muestra cada robot.
+// Robot 1
+torneo.put("Robot_001", new RobotCompeticion("Robot_001", TipoRobot.ATAQUE, 5, 3, 15000.0));
 
-#### **3️⃣ Actualizar Software (Polimorfismo + instanceof)**
-* Recorre la lista.
-* Si el robot es **de Competición** (`instanceof`), ejecuta su método
- `actualizarSoftware()` y avisa por consola.
-* Si es **de Entrenamiento**, imprime un mensaje indicando que no se actualiza en esta fase.
+// Robot 2
+torneo.put("Robot_002", new RobotEntrenamiento("Robot_002", TipoRobot.DEFENSA, 2, 1, true));
 
-#### **4️⃣ Gestión Individual (Get/Set/Sobrecarga)**
-Permite elegir una sub-acción:
-* **Modificar (Set)**: Pide posición y cambia el robot por uno nuevo (pide datos básicos).
-* **Consultar (Get)**: Pide posición y muestra datos.
-* **Mejora Personalizada (Sobrecarga)**: Pide posición de un robot. Pregunta si quiere subir 1 nivel (llama a `mejorarNivel()`) o varios (pide cantidad y llama a `mejorarNivel(int)`).
+// Robot 3
+torneo.put("Robot_003", new RobotCompeticion("Robot_003", TipoRobot.SOPORTE, 7, 5, 25000.0));
 
-#### **5️⃣ Búsqueda y Duplicados (Contains + Equals)**
-* **Buscar**: Pide un ID y Tipo, crea un robot temporal y usa `contains` para comprobar si existe.
-* **Informe de Duplicados**: Usa **bucles anidados** para comparar todos contra todos. Si encuentra dos robots iguales (según `equals`), imprime: "⚠️ ALERTA: Robot [ID] está duplicado".
+// Robot 4
+torneo.put("Robot_004", new RobotEntrenamiento("Robot_004", TipoRobot.ATAQUE, 3, 2, false));
 
-#### **6️⃣ Mantenimiento de Torneo (RemoveIf)**
-* Elimina de la lista a todos los robots que **NO** sean profesionales (es decir, elimina los de entrenamiento).
-* Muestra mensaje confirmando cuántos quedan.
+// Robot 5
+torneo.put("Robot_005", new RobotCompeticion("Robot_005", TipoRobot.DEFENSA, 6, 4, 20000.0));
+
+// Robot 6
+torneo.put("Robot_006", new RobotCompeticion("Robot_006", TipoRobot.SOPORTE, 4, 2, 18000.0));
+
+// Robot 7
+torneo.put("Robot_007", new RobotEntrenamiento("Robot_007", TipoRobot.ATAQUE, 1, 0, true));
+
+// Robot 8
+torneo.put("Robot_008", new RobotCompeticion("Robot_008", TipoRobot.DEFENSA, 8, 6, 30000.0));
+
+// Robot 9
+torneo.put("Robot_009", new RobotEntrenamiento("Robot_009", TipoRobot.SOPORTE, 2, 1, false));
+
+// Robot 10
+torneo.put("Robot_010", new RobotCompeticion("Robot_010", TipoRobot.ATAQUE, 5, 3, 16000.0));
+
+System.out.println("✅ Se han cargado 10 robots en el torneo.\n");
+```
+
+### 📋 Menú de Opciones CRUD:
+
+#### **1️⃣ CREATE - Añadir Robot**
+* Pide los datos al usuario: ID, Tipo (ATAQUE/DEFENSA/SOPORTE), Nivel, Combates.
+* Pregunta si es RobotCompeticion o RobotEntrenamiento.
+* Si es RobotCompeticion, pide presupuesto. Si es RobotEntrenamiento, pide uso educativo (S/N).
+* Inserta el robot en el HashMap con su ID como clave.
+* Muestra mensaje de confirmación.
+
+#### **2️⃣ READ - Listar Todos los Robots**
+* Recorre el HashMap (`values()` o `entrySet()`) y muestra cada robot con su ID.
+* Si el HashMap está vacío, muestra un mensaje indicándolo.
+
+#### **3️⃣ READ - Consultar Robot por ID**
+* Pide un ID y busca el robot en el HashMap usando `get()`.
+* Si existe, muestra todos sus datos. Si no, indica que no se encontró.
+
+#### **4️⃣ UPDATE - Modificar Robot Existente**
+* Pide el ID del robot a modificar.
+* Si existe, permite actualizar: nivel, combates realizados, y atributos específicos.
+* Muestra confirmación del cambio.
+
+#### **5️⃣ UPDATE - Actualizar Software (Polimorfismo + instanceof)**
+* Recorre el HashMap.
+* Actualiza los robots con un presupuesto mayor de 20.000 
+* Muestra resumen de actualizaciones.
+
+#### **6️⃣ UPDATE - Mejorar Nivel (Sobrecarga)**
+* Pide el ID del robot.
+* Pregunta si mejora 1 nivel (llama a `mejorarNivel()`) o más (pide cantidad y llama a `mejorarNivel(int)`).
+
+#### **7️⃣ DELETE - Eliminar Robot por ID**
+* Pide el ID a eliminar.
+* Si existe, lo elimina usando `remove()`.
+* Muestra mensaje de confirmación.
+
+#### **8️⃣ DELETE - Limpiar Robots no Profesionales**
+* Elimina todos los robots **de Entrenamiento** usando `removeIf()`.
+* Muestra cuántos quedan después de la limpieza.
+
+#### **9️⃣ BÚSQUEDA Y ANÁLISIS**
+* **Buscar por ID**: Usa `containsKey()` para verificar si existe.
+* **Informe de Profesionales**: Muestra todos los robots profesionales (de Competición).
+* **Robot con Mayor Puntuación**: Recorre el HashMap y encuentra el de mayor puntuación.
 
 #### **0️⃣ Salir**
 * Termina la ejecución del programa.
@@ -100,4 +155,13 @@ Permite elegir una sub-acción:
 ---
 
 ### 💡 Justificación del Diseño
-Esta estructura integra todos los conceptos (colecciones, lógica de bucles, interacción de usuario, POO) en un flujo de trabajo coherente, evitando bloques de código sueltos "antes" o "después" del menú principal.
+Esta estructura integra todos los conceptos (HashMap, métodos de colecciones, lógica de bucles, 
+interacción de usuario, POO) en un flujo de trabajo coherente. El uso de HashMap permite:
+* Acceso rápido por ID usando `get()` y `containsKey()`.
+* Eliminación eficiente con `remove()` y `removeIf()`.
+* Iteración flexible con `values()`, `keySet()` y `entrySet()`.
+
+---
+
+
+
