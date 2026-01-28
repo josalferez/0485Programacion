@@ -6,12 +6,13 @@ public abstract class Robot implements Competidor {
     private TipoRobot tipo;
     private int nivel;
     private int combatesRealizados;
+    private static int numeroRobots = 0;
     
     // Constructor Getter y Setter
 
-    public Robot(int combatesRealizados, String id, int nivel, TipoRobot tipo) {
+    public Robot(int combatesRealizados, int nivel, TipoRobot tipo) {
         this.combatesRealizados = combatesRealizados;
-        this.id = id;
+        this.id = "Robot_" + String.format("%03d", ++numeroRobots);
         this.nivel = nivel;
         this.tipo = tipo;
     }
@@ -99,5 +100,6 @@ public abstract class Robot implements Competidor {
         nivel = nivel + cantidad;
     }
 
-
+    public abstract void leerDatos();
+    
 }
