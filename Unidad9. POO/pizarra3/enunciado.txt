@@ -1,0 +1,24 @@
+Crear un modelo de "Coche de Segunda Mano" para practicar la definición de clases y la creación de múltiples objetos con sus propios atributos.
+
+Paso 1: Definir la Clase (Archivo Coche.java)
+En VS Code, crea un archivo llamado Coche.java. Recuerda que el nombre de la clase debe empezar por mayúscula.
+
+Define la clase con los siguientes atributos (variables de instancia) que determinan las cualidades del objeto:
+
+String marca, String modelo, int kilometraje, double precio
+
+
+Paso 2: Crear el Programa Principal (Archivo GestionVentas.java)
+Crea otro archivo llamado GestionVentas.java en la misma carpeta. Este contendrá el método main para probar tu clase.
+
+
+Aquí deberás:
+
+Crear al menos dos instancias (objetos) de la clase Coche.
+
+
+
+Asignar valores específicos a los atributos de cada coche.
+
+
+Mostrar por pantalla los datos de cada uno para comprobar que son objetos distintos.

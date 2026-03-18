@@ -1,0 +1,61 @@
+El Reto: Herencia en la Cafetería
+Contexto: El negocio crece y ahora tenemos diferentes tipos de máquinas. Todas comparten una base común, pero las industriales son más potentes.
+
+1. El Tipo Enumerado (en TipoCafe.java)
+(Mantenemos el del ejercicio anterior)
+
+Valores: ARABICA, ROBUSTA, MEZCLA, DESCAFEINADO.
+
+2. La clase base: Cafetera (en Cafetera.java)
+Es la clase "madre". Define lo que toda cafetera tiene.
+
+Atributos:
+
+int agua, int cafe.
+
+TipoCafe tipoEnDeposito.
+
+Constructor:
+
+public Cafetera(int agua, int cafe, TipoCafe tipo): Inicializa los tres atributos con this.
+
+Métodos:
+
+void mostrarEstado(): Imprime cuánta agua y café quedan y de qué tipo es.
+
+void hacerServicio(): Resta 200ml de agua y 20g de café. Imprime "Sirviendo café estándar".
+
+3. La clase hija: CafeteraIndustrial (en CafeteraIndustrial.java)
+Esta clase hereda de Cafetera usando la palabra clave extends.
+
+Atributos propios:
+
+int numPlatosCalientes: Indica cuántas jarras puede mantener calientes a la vez.
+
+Constructor (Uso de super):
+
+Debe recibir el agua, el café, el tipo y el número de platos.
+
+Debe usar super(agua, cafe, tipo) para enviar los datos a la clase madre y luego asignar el atributo propio.
+
+Método propio:
+
+void prepararBebidaGrande(): Gasta el doble de recursos (400ml de agua y 40g de café) e imprime "Sirviendo jarra tamaño familiar".
+
+4. La clase de prueba (en Principal.java)
+En el método main:
+
+Crea una Cafetera normal con 1000ml de agua y 100g de café MEZCLA.
+
+Crea una CafeteraIndustrial con 5000ml de agua, 500g de café ARABICA y 4 platos calientes.
+
+Demostración de herencia:
+
+Llama a mostrarEstado() en ambas (las dos pueden porque es un método heredado).
+
+Llama a hacerServicio() en la industrial (comprueba que puede usar métodos de la madre).
+
+Llama a prepararBebidaGrande() solo en la industrial.
+
+Prueba de jerarquía: Intenta llamar a prepararBebidaGrande() en la cafetera normal y comprueba que da error 
+(la madre no tiene las funciones de la hija).

@@ -1,0 +1,308 @@
+:root {
+  --bg-color: #121212;
+  --surface-color: #1e1e1e;
+  --surface-highlight: #2d2d2d;
+  --primary-color: #ffc107;
+  /* Kiosk Gold */
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --success-color: #4caf50;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --border-radius: 16px;
+  --shadow-elevation: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  /* Kiosk feel: no text selection */
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Layout --- */
+#app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+}
+
+/* --- Attract Screen --- */
+#attract-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.5s ease-in-out;
+}
+
+#attract-screen.hidden {
+  transform: translateY(-100%);
+}
+
+#attract-screen h1 {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#attract-screen p {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  animation: pulse 2s infinite;
+}
+
+/* --- Main Ordering Interface --- */
+/* Horizontal Menu (Top Bar) */
+aside {
+  background-color: var(--surface-color);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-bottom: 1px solid var(--surface-highlight);
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-md);
+  overflow-x: auto;
+  align-items: center;
+  /* Hide scrollbar */
+  scrollbar-width: none;
+}
+
+aside::-webkit-scrollbar {
+  display: none;
+}
+
+.category-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  /* Pill shape */
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.category-btn.active {
+  background-color: var(--surface-highlight);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.category-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+/* My Bookings Button (Specific Style if needed, but reusing category-btn is fine for uniformity or I can add a utility class) */
+
+/* Content Area */
+main {
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+h2.section-title {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--surface-highlight);
+  padding-bottom: var(--spacing-sm);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* Product Card */
+.kiosk-card {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-elevation);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.kiosk-card:active {
+  transform: scale(0.98);
+}
+
+.kiosk-card.selected {
+  border: 2px solid var(--primary-color);
+}
+
+.card-image {
+  height: 200px;
+  background-color: #333;
+  background-size: cover;
+  background-position: center;
+}
+
+.card-content {
+  padding: var(--spacing-md);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+
+.card-desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.card-price {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  font-weight: 800;
+  align-self: flex-end;
+}
+
+/* Footer / Cart */
+footer {
+  background-color: var(--surface-color);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-top: 1px solid var(--surface-highlight);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+}
+
+.cart-summary {
+  font-size: 1.2rem;
+}
+
+.cart-total {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--primary-color);
+}
+
+.primary-btn {
+  background-color: var(--primary-color);
+  color: #000;
+  border: none;
+  padding: var(--spacing-md) 60px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  border-radius: 50px;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.primary-btn:disabled {
+  background-color: #444;
+  color: #888;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* --- Time Selection --- */
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.time-btn {
+  background-color: var(--surface-color);
+  border: 1px solid var(--surface-highlight);
+  color: var(--text-primary);
+  padding: var(--spacing-md);
+  font-size: 1.2rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.time-btn.selected {
+  background-color: var(--primary-color);
+  color: black;
+  font-weight: bold;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.view-section {
+  display: none;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.view-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

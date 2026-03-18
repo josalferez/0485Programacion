@@ -1,0 +1,46 @@
+El Reto: El Sistema de Seguridad Avanzado
+Contexto: Estamos diseñando un software para gestionar dispositivos de una casa inteligente. Queremos que ciertos dispositivos tengan funciones de seguridad extra (como emitir alarmas o avisar a la policía). Como no todas las luces o cerraduras son de alta seguridad, usaremos una Interfaz.
+
+1. La Interfaz (en Vigilante.java)
+Define el contrato para dispositivos que protegen el hogar. Métodos:
+
+void activarAlarma(String motivo);
+
+void enviarAlertaMovil(String mensaje);
+
+2. La Clase Base: Dispositivo
+Define los atributos comunes para cualquier aparato electrónico de la casa:
+
+Atributos: nombreDispositivo, habitacion y estaEncendido.
+Metodo encender()
+
+3. La Clase Hija: CamaraSeguridad (en CamaraSeguridad.java)
+Esta clase hereda de Dispositivo e implementa Vigilante.
+
+Atributos propios: int almacenamientoSD (en GB).
+
+Implementación de la Interfaz:
+
+activarAlarma(String motivo): Debe imprimir un mensaje indicando que 
+suena la sirena por el motivo recibido.
+
+enviarAlertaMovil(String mensaje): Resta 1 GB de almacenamientoSD 
+(simulando el espacio que ocupa el clip de video enviado) 
+e imprime el mensaje de alerta.
+
+Método encender(): (Sobreescrito)  Activa el dispositivo y muestra 
+un mensaje diciendo que el sensor de movimiento está operativo.
+
+4. La Clase de Prueba (en Principal.java)
+En el main debes:
+
+Crear una CamaraSeguridad (ej: "Cámara Salón", 64GB de SD).
+
+Llamar al método encender().
+
+Uso de la interfaz: Llamar a enviarAlertaMovil("Movimiento detectado en el pasillo").
+
+Llamar a activarAlarma("Intrusión detectada").
+
+Comprobación: Mostrar cuánto espacio queda en la tarjeta SD para 
+confirmar que la alerta móvil consumió almacenamiento.

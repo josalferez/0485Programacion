@@ -1,0 +1,101 @@
+
+# 🧪 PRÁCTICA DE PROGRAMACIÓN EN JAVA 
+
+## Gestión de una Liga de Videojuegos
+
+### 📌 OBJETIVO GENERAL
+Crear una aplicación de gestión para una liga de eSports que permita administrar jugadores, 
+sus estadísticas y realizar mantenimientos de la lista mediante un menú interactivo.
+
+---
+
+## 🏗️ 1. ESTRUCTURA DE CLASES (MODELO)
+
+### 🔹 1.1 Emumerado: `RolJugador`
+Valores: 
+* `DPS`
+* `TANQUE`
+* `SOPORTE`
+
+### 🔹 1.2 Interfaz: `Competidor`
+Crea una **interfaz** con los siguientes métodos:
+* `int calcularPuntuacion()`
+* `boolean esProfesional()`
+
+### 🔹 1.3 Clase Abstracta: `Jugador`
+* **Comportamiento**: Implementa la interfaz `Competidor`.
+* **Atributos**: `nombre` (String), `rol` (RolJugador), `nivel` (int), `partidasJugadas` (int).
+
+#### Métodos:
+* **Constructor**, Getters y Setters.
+* `abstract void entrenar()`
+* `toString()`: Sobrescrito para mostrar datos.
+* `equals() y hashCode()`: Dos jugadores son iguales si tienen el mismo **nombre** (ignora mayúsculas) y **rol**.
+
+#### Implementación de Competidor:
+* `calcularPuntuacion()`: Devuelve `nivel * partidasJugadas`.
+* `esProfesional()`: Implementación base que devuelve `false`.
+
+#### Sobrecarga de Métodos:
+* `subirNivel()`: Incrementa nivel en 1.
+* `subirNivel(int cantidad)`: Incrementa nivel en `cantidad`.
+
+### 🔹 1.4 Clases Concretas
+
+#### **`JugadorAmateur`**
+* **Atributo extra**: `boolean juegaPorDiversion`.
+* `entrenar()`: Nivel + 1. 
+* `esProfesional()`: Devuelve `false` (puede usar la de la clase padre).
+* `calcularPuntuacion()`: Sobrescribe para devolver **Base + 10**.
+
+#### **`JugadorProfesional`**
+* **Atributo extra**: `double salario`.
+* `entrenar()`: Nivel + 2. 
+* `esProfesional()`: Sobrescribe para devolver `true`.
+* `calcularPuntuacion()`: Sobrescribe para devolver **Base + 50**.
+
+---
+
+## 🎮 2. CLASE PRINCIPAL (`PruebaJugador`)
+
+El programa debe basarse en un único **MENÚ INTERACTIVO** que englobe todas las funcionalidades. 
+Al iniciar, el programa crea una lista `ArrayList<Jugador>` vacía.
+
+### 📋 Menú de Opciones:
+
+#### **1️⃣ Cargar Datos de Prueba**
+* Limpia la lista actual.
+* Añade automáticamente **2 jugadores Amateur** y **2 Profesionales** predefinidos.
+* Muestra cuántos jugadores hay en la liga (`size`).
+
+#### **2️⃣ Listar Jugadores**
+* Recorre la lista (`foreach`) y muestra cada jugador.
+
+#### **3️⃣ Realizar Entrenamiento de Temporada (Polimorfismo + instanceof)**
+* Recorre la lista.
+* Si el jugador es **Profesional** (`instanceof`), ejecuta su método `entrenar()` y avisa por consola.
+* Si es **Amateur**, imprime: "El jugador [nombre] es amateur y no entrena en esta sesión".
+
+#### **4️⃣ Gestión Individual (Get/Set/Sobrecarga)**
+Permite elegir una sub-acción:
+* **Modificar (Set)**: Pide posición y cambia el jugador por uno nuevo (pide datos básicos).
+* **Consultar (Get)**: Pide posición y muestra datos.
+* **Entrenamiento Personalizado (Sobrecarga)**: Pide posición de un jugador. Pregunta si quiere 
+subir 1 nivel (llama a `subirNivel()`) o varios (pide cantidad y llama a `subirNivel(int)`).
+
+#### **5️⃣ Búsqueda y Duplicados (Contains + Equals)**
+* **Buscar**: Pide un nombre, crea un jugador temporal y usa `contains` para comprobar si existe.
+* **Informe de Duplicados**: Usa **bucles anidados** para comparar todos contra todos. Si encuentra dos jugadores 
+iguales (según `equals`), imprime: "⚠️ ALERTA: [Nombre] está duplicado".
+
+#### **6️⃣ Mantenimiento de Liga (RemoveIf)**
+* Elimina de la lista a todos los jugadores que **NO** sean profesionales (es decir, elimina amateurs).
+* Muestra mensaje confirmando cuántos quedan.
+
+#### **0️⃣ Salir**
+* Termina la ejecución del programa.
+
+---
+
+### 💡 Justificación del Diseño
+Esta estructura integra todos los conceptos (colecciones, lógica de bucles, interacción de usuario, POO) en un flujo de trabajo coherente, evitando bloques de código sueltos "antes" o "después" del menú principal.

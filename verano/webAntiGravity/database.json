@@ -1,0 +1,32 @@
+{
+    "user": {
+        "balance": 100.00
+    },
+    "inventory": [
+        {
+            "id": 1,
+            "title": "Libro 1",
+            "price": 10,
+            "stock": 5
+        },
+        {
+            "id": 2,
+            "title": "Libro 2",
+            "price": 30,
+            "stock": 15
+        },
+        {
+            "id": 3,
+            "title": "Libro 3",
+            "price": 40,
+            "stock": 20
+        },
+        {
+            "id": 4,
+            "title": "Libro 4",
+            "price": 50,
+            "stock": 10
+        }
+    ],
+    "history": []
+}

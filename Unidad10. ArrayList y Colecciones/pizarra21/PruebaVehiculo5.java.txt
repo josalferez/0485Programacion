@@ -1,0 +1,49 @@
+
+import java.util.ArrayList;
+
+public class PruebaVehiculo5 {
+    public static void main(String[] args) {
+        ArrayList<Vehiculo> stock = new ArrayList<>();
+
+        stock.add(new Vehiculo("0125CJZ", "Toyota"));
+
+        // ó
+
+        Vehiculo v2 = new Vehiculo("0254ABC", "BMW");
+        stock.add(v2);
+
+        stock.add(new Vehiculo("4589LMN", "Ford"));
+        stock.add(new Vehiculo("7231KBT", "Honda"));
+        stock.add(new Vehiculo("1055GXC", "BMW"));
+        stock.add(new Vehiculo("8842FWR", "Audi"));
+        stock.add(new Vehiculo("3319HBV", "Mercedes"));
+        stock.add(new Vehiculo("6620DRT", "Volkswagen"));
+        stock.add(new Vehiculo("5412JPX", "Hyundai"));
+        stock.add(new Vehiculo("9023LSK", "Renault"));
+        stock.add(new Vehiculo("2277VBN", "Nissan"));
+        stock.add(new Vehiculo("4091MKZ", "Peugeot"));
+
+        stock.add(new Coche("4589LMN", "Ford"));
+        stock.add(new Moto("7231KBT", "Honda"));
+        stock.add(new Coche("1055GXC", "BMW"));
+        stock.add(new Moto("8842FWR", "Yamaha"));
+        stock.add(new Coche("3319HBV", "Mercedes"));
+        stock.add(new Moto("6620DRT", "Kawasaki"));
+        stock.add(new Coche("5412JPX", "Hyundai"));
+        stock.add(new Moto("9023LSK", "Ducati"));
+        stock.add(new Coche("2277VBN", "Nissan"));
+        stock.add(new Moto("4091MKZ", "Suzuki"));
+
+        // Imprimo los datos de mi ArrayList con un foreach
+        for(Vehiculo v : stock){
+            v.mostrarDatos();
+        }
+
+        // Funciones Lambda
+        stock.forEach(p->p.mostrarDatos());
+
+
+
+    }
+
+}

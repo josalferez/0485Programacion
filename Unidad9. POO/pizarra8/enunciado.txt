@@ -1,0 +1,35 @@
+El Reto: La Cafetera Inteligente (Sobrecarga y Sobreescritura)
+Contexto: La cafetería ha instalado máquinas que permiten personalizar el servicio. Vamos a aprender a usar el mismo nombre de método para acciones distintas.
+
+1. La clase base: Cafetera (en Cafetera.java)
+Atributos: int agua, int cafe, TipoCafe variedad.
+
+Constructor: public Cafetera(int agua, int cafe, TipoCafe variedad).
+
+Método hacerCafe() (Original): Resta 200ml de agua y 20g de café. Imprime "Sirviendo un café normal".
+
+2. La clase hija: CafeteraPRO (en CafeteraPRO.java)
+Esta clase extiende a Cafetera.
+
+Sobreescritura (@Override):
+
+Redefine el método hacerCafe(). Ahora, además de restar los ingredientes, debe imprimir: "☕ Sirviendo café PREMIUM de tipo [variedad] con espumado automático".
+
+Sobrecarga de Métodos (Mismo nombre, distintos parámetros):
+
+public void hacerCafe(int tazas): Este método recibe cuántas tazas queremos. Debe restar 200 * tazas de agua y 20 * tazas de café. Imprime: "Sirviendo [tazas] cafés a la vez".
+
+public void hacerCafe(String intensidad): Si la intensidad es "fuerte", resta 40g de café en lugar de 20g. Si es "suave", resta solo 10g.
+
+3. La clase de prueba (en Principal.java)
+En el main:
+
+Crea una CafeteraPRO con 5000ml de agua y 500g de café.
+
+Prueba la Sobreescritura: Llama a miCafetera.hacerCafe(). Verás que ejecuta el mensaje "PREMIUM" y no el de la clase madre.
+
+Prueba la Sobrecarga 1: Llama a miCafetera.hacerCafe(3). Verás que descuenta ingredientes para 3 personas.
+
+Prueba la Sobrecarga 2: Llama a miCafetera.hacerCafe("fuerte"). Verás que el consumo de café es mayor.
+
+Muestra el estado final para verificar que los cálculos de agua y café han sido correctos según cada método.

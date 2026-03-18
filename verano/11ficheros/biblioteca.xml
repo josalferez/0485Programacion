@@ -1,0 +1,10 @@
+<biblioteca>
+    <libro>
+        <titulo>El quijote</titulo>
+        <autor>Cervantes></autor>
+    </libro>
+    <libro>
+        <titulo>Seda</titulo>
+        <autor>Baricco</autor>
+    </libro>
+</biblioteca>

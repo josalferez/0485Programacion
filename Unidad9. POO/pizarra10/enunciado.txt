@@ -1,0 +1,32 @@
+El Reto: El Taller de Neumáticos (Arrays de Objetos)
+Contexto: Trabajamos en un taller mecánico. Tenemos una estantería 
+con varios neumáticos y debemos revisar cuáles están bajos de aire para
+ inflarlos antes de montarlos en los coches.
+
+1. El Tipo Enumerado (TipoNeumatico.java)
+Define las categorías de neumáticos disponibles: VERANO, INVIERNO, ALL_SEASON, OFF_ROAD.
+
+2. La clase Neumatico (Neumatico.java)
+Atributos: TipoNeumatico tipo, double psi (libras por pulgada cuadrada).
+
+Constructor: public Neumatico(TipoNeumatico tipo, int psi).
+
+Método mostrarEstado(): Imprime "[Tipo] - Presión actual: [psi] PSI".
+
+3. La clase de prueba GestionTaller.java
+Es aquí donde gestionaremos el inventario:
+
+Crear el Array: Declarar un array para 3 neumáticos. Neumatico[] inventario = new Neumatico[3];
+
+Instanciar los objetos:
+
+inventario[0] = new Neumatico(TipoNeumatico.VERANO, 32);
+
+inventario[1] = new Neumatico(TipoNeumatico.INVIERNO, 15); (¡Este está muy bajo!)
+
+inventario[2] = new Neumatico(TipoNeumatico.OFF_ROAD, 30);
+
+Recorrer el array: Usar un bucle para ejecutar mostrarEstado() en cada elemento.
+
+Lógica de búsqueda (El Reto): Crear un bucle que recorra el array y muestre el mensaje
+ "¡ALERTA: PRESIÓN CRÍTICA! Necesita inflado" solo para los neumáticos que tengan menos de 20 PSI.

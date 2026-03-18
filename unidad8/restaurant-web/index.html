@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Órdenes - Restaurante 🥡</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🥡 Sistema de Órdenes</h1>
+            <p class="subtitle">Restaurante Delicioso</p>
+        </header>
+
+        <main class="main-content">
+            <section class="menu-section">
+                <h2>Nuestro Menú</h2>
+                <div id="menuContainer" class="menu-grid"></div>
+            </section>
+
+            <section class="order-section">
+                <h2>Tu Pedido</h2>
+                <div id="orderContainer" class="order-list">
+                    <p class="empty-order">No hay artículos en tu pedido</p>
+                </div>
+                <div class="order-total">
+                    <span>Total:</span>
+                    <span id="totalPrice" class="total-price">€0.00</span>
+                </div>
+                <button id="clearOrderBtn" class="btn btn-secondary" disabled>Limpiar Pedido</button>
+                <button id="confirmOrderBtn" class="btn btn-primary" disabled>Confirmar Pedido</button>
+            </section>
+        </main>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2>¡Pedido Confirmado! ✓</h2>
+            <div id="modalOrderSummary"></div>
+            <button id="closeModalBtn" class="btn btn-primary">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

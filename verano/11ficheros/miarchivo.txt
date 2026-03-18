@@ -1,0 +1,1 @@
+¡Hola, mundo! Este es un ejemplo de cómo guardar texto en un fichero.

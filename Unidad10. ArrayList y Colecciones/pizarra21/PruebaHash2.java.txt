@@ -1,0 +1,42 @@
+import java.util.ArrayList;
+
+public class PruebaHash {
+    public static void main(String[] args) {
+        ArrayList<Vehiculo> stock = new ArrayList<>();
+
+        stock.add(new Vehiculo("0546ABC", "Audi"));
+        stock.add(new Vehiculo("1546ABC", "Volkswagen"));
+        stock.add(new Vehiculo("2345DEF", "Toyota"));
+        stock.add(new Vehiculo("3456GHI", "Ford"));
+        stock.add(new Moto("4567JKL", "KTM"));
+        stock.add(new Vehiculo("5678MNO", "Seat"));
+        stock.add(new Vehiculo("6789PQR", "Renault"));
+        stock.add(new Vehiculo("7890STU", "Peugeot"));
+        stock.add(new Vehiculo("8901VWX", "BMW"));
+        stock.add(new Vehiculo("9012YZA", "Mercedes-Benz"));
+        stock.add(new Vehiculo("0123BCD", "Audi"));
+        stock.add(new Moto("1234FGH", "Kawasaki"));
+
+        // Recorro ArrayList usando Lambda
+        stock.forEach(p -> {
+            p.arrancar();
+            if (p instanceof Moto miMoto) {
+                miMoto.hacerCaballito();
+            }
+        });
+
+        // Elimino las matrículas que empiezan por 90 usando lambda
+        stock.removeIf(p->p.getMatricula().startsWith("90"));
+
+        // imprimo todos los elementos de la lista usando Lambda
+        System.out.println("");
+        stock.forEach(p->p.mostrarDatos());
+
+        // muestro todos los elementos de la lista con un foreach
+        System.out.println("");
+        for (Vehiculo vehiculo : stock) {
+            vehiculo.mostrarDatos();
+        }
+
+    }
+}

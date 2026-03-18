@@ -1,0 +1,44 @@
+Reto: Gestión Dinámica de la Cola del Taller
+Contexto
+En nuestro taller mecánico, el flujo de vehículos es constante e impredecible: 
+unos llegan, otros se reparan y otros se van. Como no sabemos de antemano 
+cuántos coches tendremos, utilizaremos un ArrayList para gestionar la cola de reparaciones de forma flexible.
+
+1. La Clase Coche (Coche.java)
+Crea una clase con los siguientes componentes:
+Atributos: String matricula, boolean estaReparado.
+Constructor: public Coche(String matricula). El atributo estaReparado debe inicializarse siempre como false.
+Método toString() o mostrarInfo(): Que imprima la matrícula y el estado (ej: "Coche [ABC-1234] - Reparado: NO").
+
+2. El Programa Principal (GestionTaller.java)
+Debes implementar la lógica del taller siguiendo estos pasos obligatorios utilizando los métodos de la clase ArrayList:
+
+Apertura del Taller (Crear y Añadir):
+
+Crea un ArrayList de objetos Coche.
+
+Añade 3 coches nuevos a la lista con matrículas diferentes.
+
+Estado del Inventario (Tamaño):
+
+Muestra por consola cuántos coches hay en el taller usando el método .size().
+
+Reparación del primer vehículo (Obtener y Modificar):
+
+Accede al primer coche de la lista (índice 0) utilizando .get().
+
+Cambia su estado de estaReparado a true.
+
+Muestra su información por consola para confirmar el cambio.
+
+Entrega del vehículo (Borrar):
+
+El primer coche ya está listo. Elimínalo de la lista usando .remove().
+
+Comprobación: Muestra de nuevo el tamaño de la lista y verifica quién es ahora el coche en la posición 0.
+
+Cierre por Vacaciones (Limpiar):
+
+Vacía la lista completa con el método .clear().
+
+Muestra un mensaje final confirmando que el taller tiene 0 coches.

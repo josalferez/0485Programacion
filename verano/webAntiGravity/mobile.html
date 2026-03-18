@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Recarga</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0b0e14;
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .mobile-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .amount {
+            font-size: 2.5rem;
+            color: #10b981;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .success {
+            display: none;
+            color: #10b981;
+        }
+
+        .form-view {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="mobile-container">
+        <div id="form-view" class="form-view">
+            <h1>Confirmar Recarga</h1>
+            <p>Estás a punto de recargar:</p>
+            <div class="amount" id="amount-display">0.00 €</div>
+
+            <form onsubmit="event.preventDefault(); verify();">
+                <input type="text" id="user" placeholder="Usuario" required>
+                <input type="password" id="pass" placeholder="Contraseña" required>
+                <button type="submit">Confirmar Pago</button>
+            </form>
+        </div>
+
+        <div id="success-view" class="success">
+            <div style="font-size: 4rem;">✅</div>
+            <h2>¡Recarga Exitosa!</h2>
+            <p>Tu saldo ha sido actualizado.</p>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Ya puedes cerrar esta ventana.</p>
+        </div>
+    </div>
+
+    <script>
+        // Get amount from URL
+        const params = new URLSearchParams(window.location.search);
+        const amount = parseFloat(params.get('amount')) || 0;
+        document.getElementById('amount-display').textContent = amount.toFixed(2) + ' €';
+
+        function verify() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+
+            if (u === 'a' && p === 'a') {
+                // API Call
+                fetch('/api/balance/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: amount })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success
+                            document.getElementById('form-view').style.display = 'none';
+                            document.getElementById('success-view').style.display = 'block';
+
+                            // Close after 3 seconds
+                            setTimeout(() => {
+                                window.close();
+                            }, 3000);
+                        } else {
+                            alert("Error en el servidor: " + data.error);
+                        }
+                    })
+                    .catch(err => {
+                        alert("Error de conexión");
+                        console.error(err);
+                    });
+
+            } else {
+                alert('Credenciales incorrectas');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+// Importo la libreriía que me permite 
+// leer valores por pantalla
+import java.util.Scanner;
+
+public class suma {
+    public static void main(String[] args) {
+        // Variables tipo char
+       int euros;
+	   int pesetas = 166;
+	   Scanner sc = new Scanner(System.in);
+	   
+       // Le preguntamos al usuario cuantos euros quiere 
+	   // convertir en pesetas.
+       String pregunta = "¿Cuantos euros quieres convertir?: ";
+	   System.out.println(pregunta);
+	   euros = sc.nextInt();
+	   
+	   System.out.println("Has introducido " + euros + " euros");
+
+       // Mostramos todo en una sola sentencia println
+       System.out.println( euros + " euros son " + (pesetas * euros));
+    }
+}

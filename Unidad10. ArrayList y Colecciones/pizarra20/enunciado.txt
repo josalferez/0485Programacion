@@ -1,0 +1,167 @@
+# 🧪 PRÁCTICA DE PROGRAMACIÓN EN JAVA 
+
+## Gestión de un Torneo de Robots de Combate
+
+### 📌 OBJETIVO GENERAL
+Crear una aplicación de gestión para un torneo de robots que permita 
+administrar participantes, 
+sus estadísticas y realizar mantenimientos de la lista mediante un 
+menú interactivo.
+
+---
+
+## 🏗️ 1. ESTRUCTURA DE CLASES (MODELO)
+
+### 🔹 1.1 Enumerado: `TipoRobot`
+Valores: 
+* `ATAQUE`
+* `DEFENSA`
+* `SOPORTE`
+
+### 🔹 1.2 Interfaz: `Competidor`
+Crea una **interfaz** con los siguientes métodos:
+* `int calcularPuntuacion()`
+* `boolean esProfesional()`
+
+### 🔹 1.3 Clase Abstracta: `Robot`
+* **Comportamiento**: Implementa la interfaz `Competidor`.
+* **Atributos privados**: `id` (String), `tipo` (TipoRobot), 
+`nivel` (int),
+ `combatesRealizados` (int).
+
+#### Métodos:
+* **Constructor**, Getters y Setters.
+* `abstract void actualizarSoftware()`
+* `toString()`: Sobrescrito para mostrar toda la información.
+* `equals() y hashCode()`: Dos robots son iguales si tienen el mismo **id** (ignora mayúsculas) y **tipo**.
+
+#### Implementación de Competidor:
+* `calcularPuntuacion()`: Devuelve `nivel * combatesRealizados`.
+
+#### Sobrecarga de Métodos:
+* `public void mejorarNivel()`: Incrementa nivel en 1.
+* `public void mejorarNivel(int cantidad)`: Incrementa nivel en `cantidad`.
+
+### 🔹 1.4 Clases Concretas que heredan de Robot
+
+#### **`RobotEntrenamiento`**
+* **Atributo extra**: `boolean usoEducativo`.
+* `actualizarSoftware()`: Nivel + 1. 
+* `esProfesional()`: Devuelve `false`.
+* `calcularPuntuacion()`: Sobrescribe para devolver **Base + 10**.
+
+#### **`RobotCompeticion`**
+* **Atributo extra**: `double presupuesto`.
+* `actualizarSoftware()`: Nivel + 2. 
+* `esProfesional()`: Devuelve `true`.
+* `calcularPuntuacion()`: Sobrescribe para devolver **Base + 50**.
+
+---
+
+## 🎮 2. CLASE PRINCIPAL (`PruebaRobot.java`)
+
+El programa debe basarse en un único **MENÚ INTERACTIVO** que englobe 
+todas las funcionalidades. 
+Al iniciar, el programa inserta **10 robots aleatorios** en un `HashMap<String, Robot>` 
+que se llama `torneo`, donde la clave es el ID único del robot.
+
+### 🤖 Generación Inicial de Robots
+
+#### 📝 Código para cargar los 10 robots iniciales:
+```java
+HashMap<String, Robot> torneo = new HashMap<>();
+
+// Robot 1
+torneo.put("Robot_001", new RobotCompeticion("Robot_001", TipoRobot.ATAQUE, 5, 3, 15000.0));
+
+// Robot 2
+torneo.put("Robot_002", new RobotEntrenamiento("Robot_002", TipoRobot.DEFENSA, 2, 1, true));
+
+// Robot 3
+torneo.put("Robot_003", new RobotCompeticion("Robot_003", TipoRobot.SOPORTE, 7, 5, 25000.0));
+
+// Robot 4
+torneo.put("Robot_004", new RobotEntrenamiento("Robot_004", TipoRobot.ATAQUE, 3, 2, false));
+
+// Robot 5
+torneo.put("Robot_005", new RobotCompeticion("Robot_005", TipoRobot.DEFENSA, 6, 4, 20000.0));
+
+// Robot 6
+torneo.put("Robot_006", new RobotCompeticion("Robot_006", TipoRobot.SOPORTE, 4, 2, 18000.0));
+
+// Robot 7
+torneo.put("Robot_007", new RobotEntrenamiento("Robot_007", TipoRobot.ATAQUE, 1, 0, true));
+
+// Robot 8
+torneo.put("Robot_008", new RobotCompeticion("Robot_008", TipoRobot.DEFENSA, 8, 6, 30000.0));
+
+// Robot 9
+torneo.put("Robot_009", new RobotEntrenamiento("Robot_009", TipoRobot.SOPORTE, 2, 1, false));
+
+// Robot 10
+torneo.put("Robot_010", new RobotCompeticion("Robot_010", TipoRobot.ATAQUE, 5, 3, 16000.0));
+
+System.out.println("✅ Se han cargado 10 robots en el torneo.\n");
+```
+
+### 📋 Menú de Opciones CRUD:
+
+#### **1️⃣ CREATE - Añadir Robot**
+* Pide los datos al usuario: ID, Tipo (ATAQUE/DEFENSA/SOPORTE), Nivel, Combates.
+* Pregunta si es RobotCompeticion o RobotEntrenamiento.
+* Si es RobotCompeticion, pide presupuesto. Si es RobotEntrenamiento, pide uso educativo (S/N).
+* Inserta el robot en el HashMap con su ID como clave.
+* Muestra mensaje de confirmación.
+
+#### **2️⃣ READ - Listar Todos los Robots**
+* Recorre el HashMap (`values()` o `entrySet()`) y muestra cada robot con su ID.
+* Si el HashMap está vacío, muestra un mensaje indicándolo.
+
+#### **3️⃣ READ - Consultar Robot por ID**
+* Pide un ID y busca el robot en el HashMap usando `get()`.
+* Si existe, muestra todos sus datos. Si no, indica que no se encontró.
+
+#### **4️⃣ UPDATE - Modificar Robot Existente**
+* Pide el ID del robot a modificar.
+* Si existe, permite actualizar: nivel, combates realizados, y atributos específicos.
+* Muestra confirmación del cambio.
+
+#### **5️⃣ UPDATE - Actualizar Software (Polimorfismo + instanceof)**
+* Recorre el HashMap.
+* Actualiza los robots con un presupuesto mayor de 20.000 
+* Muestra resumen de actualizaciones.
+
+#### **6️⃣ UPDATE - Mejorar Nivel (Sobrecarga)**
+* Pide el ID del robot.
+* Pregunta si mejora 1 nivel (llama a `mejorarNivel()`) o más (pide cantidad y llama a `mejorarNivel(int)`).
+
+#### **7️⃣ DELETE - Eliminar Robot por ID**
+* Pide el ID a eliminar.
+* Si existe, lo elimina usando `remove()`.
+* Muestra mensaje de confirmación.
+
+#### **8️⃣ DELETE - Limpiar Robots no Profesionales**
+* Elimina todos los robots **de Entrenamiento** usando `removeIf()`.
+* Muestra cuántos quedan después de la limpieza.
+
+#### **9️⃣ BÚSQUEDA Y ANÁLISIS**
+* **Buscar por ID**: Usa `containsKey()` para verificar si existe.
+* **Informe de Profesionales**: Muestra todos los robots profesionales (de Competición).
+* **Robot con Mayor Puntuación**: Recorre el HashMap y encuentra el de mayor puntuación.
+
+#### **0️⃣ Salir**
+* Termina la ejecución del programa.
+
+---
+
+### 💡 Justificación del Diseño
+Esta estructura integra todos los conceptos (HashMap, métodos de colecciones, lógica de bucles, 
+interacción de usuario, POO) en un flujo de trabajo coherente. El uso de HashMap permite:
+* Acceso rápido por ID usando `get()` y `containsKey()`.
+* Eliminación eficiente con `remove()` y `removeIf()`.
+* Iteración flexible con `values()`, `keySet()` y `entrySet()`.
+
+---
+
+
+
