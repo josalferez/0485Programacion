@@ -14,5 +14,4 @@ public interface AlumnoDAO {
     Alumno obtenerPorId(int id) throws SQLException;
 
     List<Alumno> listarTodos() throws SQLException;
-
 }

@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 import src.dao.*;
-import src.model.Alumno;
+import src.model.*;
 
 
 public class Main {
@@ -9,15 +9,14 @@ public class Main {
     static AlumnoDAO alumnoDAO = new AlumnoDAOImpl();
     static CursoDAO cursoDAO = new CursoDAOImpl();
     static MatriculaDAO matriculaDAO = new MatriculaDAOImpl(); 
+    static Scanner scanner = new Scanner(System.in);
+    static int opcion;
 
     public static void main(String[] args) {
         pintarMenu();
     }
 
     public static void pintarMenu() {
-        Scanner scanner = new Scanner(System.in);
-        int opcion;
-
         do {
             System.out.println("\n--- Menú de Gestión Académica ---");
             System.out.println("1. Listar alumnos");
@@ -37,8 +36,7 @@ public class Main {
                 scanner.next(); // Limpiar entrada incorrecta
                 System.out.print("Seleccione una opción: ");
             }
-            opcion = scanner.nextInt();
-            scanner.nextLine(); // Consumir salto de línea
+            opcion = Integer.parseInt(scanner.nextLine());
 
             switch (opcion) {
                 case 1:
@@ -158,7 +156,7 @@ public class Main {
     static void listarCursos(){
         try {
             System.out.println("\n--- Listado de Cursos ---");
-            for (var curso : cursoDAO.listarTodos()) {
+            for (Curso curso : cursoDAO.listarTodos()) {
                 System.out.println(curso);
             }
         } catch (Exception e) {
@@ -173,7 +171,7 @@ public class Main {
             System.out.print("Ingrese los créditos del curso: ");
             int creditos = scanner.nextInt();
             scanner.nextLine(); // Consumir salto de línea
-            var curso = new src.model.Curso(0, titulo, creditos); // ID se asignará en la base de datos
+            Curso curso = new Curso(0, titulo, creditos); // ID se asignará en la base de datos
             cursoDAO.insertar(curso);
             System.out.println("Curso creado exitosamente.");
         } catch (Exception e) {
