@@ -103,3 +103,33 @@ La aplicación debe mostrar el siguiente menú por consola:
 ---
 
 > **💡 Consejo:** Para el listado con JOIN, crea una clase DTO (Data Transfer Object) o un modelo específico que contenga los nombres de los objetos relacionados para facilitar la visualización en la consola.
+
+---
+
+## 💾 Anexo: Consultas SQL de las Implementaciones DAO
+
+A continuación se muestran las consultas SQL utilizadas en las clases que implementan las interfaces (DAOImpl):
+
+### SocioDAOImpl
+- **insertar**: `INSERT INTO socios (nombre, email) VALUES (?, ?)`
+- **actualizar**: `UPDATE socios SET nombre = ?, email = ? WHERE id = ?`
+- **eliminar**: `DELETE FROM socios WHERE id = ?`
+- **obtenerPorId**: `SELECT * FROM socios WHERE id = ?`
+- **listarTodos**: `SELECT * FROM socios`
+
+### LibroDAOImpl
+- **insertar**: `INSERT INTO libros (titulo, autor) VALUES (?, ?)`
+- **actualizar**: `UPDATE libros SET titulo = ?, autor = ? WHERE id = ?`
+- **eliminar**: `DELETE FROM libros WHERE id = ?`
+- **obtenerPorId**: `SELECT * FROM libros WHERE id = ?`
+- **listarTodos**: `SELECT * FROM libros`
+
+### PrestamoDAOImpl
+- **registrarPrestamo** (Transacción):
+  - `INSERT INTO prestamos (socio_id, libro_id, fecha) VALUES (?, ?, ?)`
+  - `UPDATE libros SET disponible = false WHERE id = ?`
+- **listarPrestamosDetallados**:
+  - `SELECT s.nombre AS socio_nombre, l.titulo AS libro_titulo, p.fecha FROM prestamos p JOIN socios s ON p.socio_id = s.id JOIN libros l ON p.libro_id = l.id`
+- **cancelarPrestamo** (Transacción):
+  - `UPDATE libros SET disponible = true WHERE id = (SELECT libro_id FROM prestamos WHERE id = ?)`
+  - `DELETE FROM prestamos WHERE id = ?`

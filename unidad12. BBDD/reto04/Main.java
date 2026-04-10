@@ -52,7 +52,6 @@ public class Main {
                 default->System.out.println("\nOpción no válida. Intente de nuevo.");
             }
         } while (opcion != 0);
-
         scanner.close();
     }
 
