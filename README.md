@@ -64,7 +64,7 @@ A lo largo del curso se abordan los siguientes bloques:
 ## 🛠️ Tecnologías utilizadas
 
 * ☕ Java
-* 💻 Visual Studio Code / IntelliJ IDEA
+* 💻 Visual Studio Code 
 * 🗃️ Git y GitHub
 
 ---
