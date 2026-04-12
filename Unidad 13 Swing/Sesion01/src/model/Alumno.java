@@ -1,54 +1,38 @@
 package model;
 
-public class Alumno {
-    private int id;
-    private String nombre;
-    private String email;
+public class Alumno extends Usuario {
+    private String beca;
+    private String promocion;
 
     public Alumno() {
+        super();
     }
 
-    public Alumno(int id, String nombre, String email) {
-        this.id = id;
-        this.nombre = nombre;
-        this.email = email;
+    public Alumno(String beca, String promocion) {
+        this.beca = beca;
+        this.promocion = promocion;
     }
 
-    public Alumno(String nombre, String email) {
-        this.nombre = nombre;
-        this.email = email;
+    public Alumno(int id, String username, String password, String email, String nombre, String apellidos, String dni, String rol, String beca, String promocion) {
+        super(id, username, password, email, nombre, apellidos, dni, rol);
+        this.beca = beca;
+        this.promocion = promocion;
     }
 
-    public int getId() {
-        return id;
-    }
+    public String getBeca() { return beca; }
+    public void setBeca(String beca) { this.beca = beca; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getPromocion() { return promocion; }
+    public void setPromocion(String promocion) { this.promocion = promocion; }
 
     @Override
     public String toString() {
         return "Alumno{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", email='" + email + '\'' +
+                "id=" + getId() +
+                ", nombre='" + getNombre() + '\'' +
+                ", apellidos='" + getApellidos() + '\'' +
+                ", beca='" + beca + '\'' +
+                ", promocion='" + promocion + '\'' +
                 '}';
     }
 }

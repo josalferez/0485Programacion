@@ -14,42 +14,57 @@ public class AlumnoDAOImpl implements AlumnoDAO {
 
     @Override
     public int insertar(Alumno alumno) throws SQLException {
-        String sql = "INSERT INTO alumnos (nombre, email) VALUES (?, ?)";
+        // En el patrón Joined Table, primero se inserta en usuarios (se hace en la vista o servicio)
+        // y luego aquí se vincula insertando en alumnos usando el mismo ID.
+        String sql = "INSERT INTO alumnos (usuario_id, beca, promocion) VALUES (?, ?, ?)";
         try (Connection conn = ConexionDB.conectar();
-             PreparedStatement pstmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
-            pstmt.setString(1, alumno.getNombre());
-            pstmt.setString(2, alumno.getEmail());
+            pstmt.setInt(1, alumno.getId());
+            pstmt.setString(2, alumno.getBeca());
+            pstmt.setString(3, alumno.getPromocion());
             pstmt.executeUpdate();
-
-            try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-            }
+            return alumno.getId();
         }
-        return -1;
     }
 
     @Override
     public void actualizar(Alumno alumno) throws SQLException {
-        String sql = "UPDATE alumnos SET nombre = ?, email = ? WHERE alumno_id = ?";
-        try (Connection conn = ConexionDB.conectar();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, alumno.getNombre());
-            pstmt.setString(2, alumno.getEmail());
-            pstmt.setInt(3, alumno.getId());
-            pstmt.executeUpdate();
+        // Actualizamos ambas tablas
+        String sqlUsuario = "UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, dni = ? WHERE id = ?";
+        String sqlAlumno = "UPDATE alumnos SET beca = ?, promocion = ? WHERE usuario_id = ?";
+        
+        try (Connection conn = ConexionDB.conectar()) {
+            conn.setAutoCommit(false);
+            try {
+                try (PreparedStatement ptstU = conn.prepareStatement(sqlUsuario)) {
+                    ptstU.setString(1, alumno.getNombre());
+                    ptstU.setString(2, alumno.getApellidos());
+                    ptstU.setString(3, alumno.getEmail());
+                    ptstU.setString(4, alumno.getDni());
+                    ptstU.setInt(5, alumno.getId());
+                    ptstU.executeUpdate();
+                }
+                try (PreparedStatement ptstA = conn.prepareStatement(sqlAlumno)) {
+                    ptstA.setString(1, alumno.getBeca());
+                    ptstA.setString(2, alumno.getPromocion());
+                    ptstA.setInt(3, alumno.getId());
+                    ptstA.executeUpdate();
+                }
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            }
         }
     }
 
     @Override
     public void eliminar(int id) throws SQLException {
-        String sql = "DELETE FROM alumnos WHERE alumno_id = ?";
+        // Borrar el usuario borrará el alumno por el ON DELETE CASCADE
+        String sql = "DELETE FROM usuarios WHERE id = ?";
         try (Connection conn = ConexionDB.conectar();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         }
@@ -57,43 +72,48 @@ public class AlumnoDAOImpl implements AlumnoDAO {
 
     @Override
     public Alumno obtenerPorId(int id) throws SQLException {
-        String sql = "SELECT * FROM alumnos WHERE alumno_id = ?";
-        Alumno alumno = null;
-        
+        String sql = "SELECT u.*, a.beca, a.promocion FROM usuarios u " +
+                     "JOIN alumnos a ON u.id = a.usuario_id WHERE u.id = ?";
         try (Connection conn = ConexionDB.conectar();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    alumno = new Alumno(
-                            rs.getInt("alumno_id"),
-                            rs.getString("nombre"),
-                            rs.getString("email")
-                    );
+                    return mapResultSetToAlumno(rs);
                 }
             }
         }
-        return alumno;
+        return null;
     }
 
     @Override
     public List<Alumno> listarTodos() throws SQLException {
-        String sql = "SELECT * FROM alumnos";
+        String sql = "SELECT u.*, a.beca, a.promocion FROM usuarios u " +
+                     "JOIN alumnos a ON u.id = a.usuario_id";
         List<Alumno> alumnos = new ArrayList<>();
-        
         try (Connection conn = ConexionDB.conectar();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-            
             while (rs.next()) {
-                alumnos.add(new Alumno(
-                        rs.getInt("alumno_id"),
-                        rs.getString("nombre"),
-                        rs.getString("email")
-                ));
+                alumnos.add(mapResultSetToAlumno(rs));
             }
         }
         return alumnos;
+    }
+
+    private Alumno mapResultSetToAlumno(ResultSet rs) throws SQLException {
+        Alumno a = new Alumno();
+        a.setId(rs.getInt("id"));
+        a.setUsername(rs.getString("username"));
+        a.setPassword(rs.getString("password"));
+        a.setEmail(rs.getString("email"));
+        a.setNombre(rs.getString("nombre"));
+        a.setApellidos(rs.getString("apellidos"));
+        a.setDni(rs.getString("dni"));
+        a.setRol(rs.getString("rol"));
+        a.setBeca(rs.getString("beca"));
+        a.setPromocion(rs.getString("promocion"));
+        return a;
     }
 }

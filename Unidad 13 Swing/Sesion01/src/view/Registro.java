@@ -16,87 +16,139 @@ import model.Profesor;
 
 public class Registro extends JFrame implements ActionListener {
 
-    private JTextField txtNombre, txtDNI, txtEmail;
+    private JTextField txtNombre, txtApellidos, txtDNI, txtEmail;
     private JPasswordField txtPassword, txtConfirmar;
     private JComboBox<String> comboRol;
+    private JLabel lblExtra1, lblExtra2;
+    private JTextField txtExtra1, txtExtra2;
     private JButton btnRegistrar, btnCancelar;
 
     public Registro() {
-        setTitle("Gestión Académica - Registro de Usuario");
-        setSize(400, 500);
+        setTitle("Gestión Académica - Registro de Usuario Pro");
+        setSize(450, 600);
         setLayout(null);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        int lblX = 50, txtX = 160, width = 180, height = 25;
+        int lblX = 50, txtX = 180, width = 200, height = 25;
+        int y = 30;
 
-        // Nombre y Apellidos
-        JLabel lblNombre = new JLabel("Nombre y Apell.:");
-        lblNombre.setBounds(lblX, 30, 100, height);
+        // Nombre
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setBounds(lblX, y, 100, height);
         add(lblNombre);
 
         txtNombre = new JTextField();
-        txtNombre.setBounds(txtX, 30, width, height);
+        txtNombre.setBounds(txtX, y, width, height);
         add(txtNombre);
+        y += 40;
+
+        // Apellidos
+        JLabel lblApellidos = new JLabel("Apellidos:");
+        lblApellidos.setBounds(lblX, y, 100, height);
+        add(lblApellidos);
+
+        txtApellidos = new JTextField();
+        txtApellidos.setBounds(txtX, y, width, height);
+        add(txtApellidos);
+        y += 40;
 
         // DNI (Será el nombre de usuario)
-        JLabel lblDNI = new JLabel("DNI (Usuario):");
-        lblDNI.setBounds(lblX, 75, 100, height);
+        JLabel lblDNI = new JLabel("DNI (Username):");
+        lblDNI.setBounds(lblX, y, 120, height);
         add(lblDNI);
 
         txtDNI = new JTextField();
-        txtDNI.setBounds(txtX, 75, width, height);
+        txtDNI.setBounds(txtX, y, width, height);
         add(txtDNI);
+        y += 40;
 
         // Email
         JLabel lblEmail = new JLabel("Email:");
-        lblEmail.setBounds(lblX, 120, 100, height);
+        lblEmail.setBounds(lblX, y, 100, height);
         add(lblEmail);
 
         txtEmail = new JTextField();
-        txtEmail.setBounds(txtX, 120, width, height);
+        txtEmail.setBounds(txtX, y, width, height);
         add(txtEmail);
+        y += 40;
 
         // Contraseña
         JLabel lblPass = new JLabel("Contraseña:");
-        lblPass.setBounds(lblX, 165, 100, height);
+        lblPass.setBounds(lblX, y, 100, height);
         add(lblPass);
 
         txtPassword = new JPasswordField();
-        txtPassword.setBounds(txtX, 165, width, height);
+        txtPassword.setBounds(txtX, y, width, height);
         add(txtPassword);
+        y += 40;
 
         // Confirmar Contraseña
         JLabel lblConf = new JLabel("Confirmar:");
-        lblConf.setBounds(lblX, 210, 100, height);
+        lblConf.setBounds(lblX, y, 100, height);
         add(lblConf);
 
         txtConfirmar = new JPasswordField();
-        txtConfirmar.setBounds(txtX, 210, width, height);
+        txtConfirmar.setBounds(txtX, y, width, height);
         add(txtConfirmar);
+        y += 40;
 
         // Rol
         JLabel lblRol = new JLabel("Rol:");
-        lblRol.setBounds(lblX, 255, 100, height);
+        lblRol.setBounds(lblX, y, 100, height);
         add(lblRol);
 
         comboRol = new JComboBox<>(new String[]{"alumno", "profesor"});
-        comboRol.setBounds(txtX, 255, width, height);
+        comboRol.setBounds(txtX, y, width, height);
+        comboRol.addActionListener(e -> updateExtraFields());
         add(comboRol);
+        y += 40;
+
+        // Campos Extra (Dependen del rol)
+        lblExtra1 = new JLabel("Beca:");
+        lblExtra1.setBounds(lblX, y, 100, height);
+        add(lblExtra1);
+
+        txtExtra1 = new JTextField();
+        txtExtra1.setBounds(txtX, y, width, height);
+        add(txtExtra1);
+        y += 40;
+
+        lblExtra2 = new JLabel("Promoción:");
+        lblExtra2.setBounds(lblX, y, 100, height);
+        add(lblExtra2);
+
+        txtExtra2 = new JTextField();
+        txtExtra2.setBounds(txtX, y, width, height);
+        add(txtExtra2);
+        y += 50;
 
         // Botones
         btnRegistrar = new JButton("Registrar");
-        btnRegistrar.setBounds(70, 330, 120, 35);
-        btnRegistrar.setBackground(new Color(46, 204, 113));
+        btnRegistrar.setBounds(80, y, 130, 40);
+        btnRegistrar.setBackground(new Color(52, 152, 219));
         btnRegistrar.setForeground(Color.WHITE);
         btnRegistrar.addActionListener(this);
         add(btnRegistrar);
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBounds(210, 330, 120, 35);
+        btnCancelar.setBounds(230, y, 130, 40);
         btnCancelar.addActionListener(this);
         add(btnCancelar);
+
+        updateExtraFields(); // Inicializar etiquetas
+    }
+
+    private void updateExtraFields() {
+        String rol = (String) comboRol.getSelectedItem();
+        if ("alumno".equals(rol)) {
+            lblExtra1.setText("Beca:");
+            lblExtra2.setText("Promoción:");
+        } else {
+            lblExtra1.setText("Departamento:");
+            lblExtra2.setText("Especialidad:");
+        }
     }
 
     @Override
@@ -112,14 +164,17 @@ public class Registro extends JFrame implements ActionListener {
 
     private void ejecutarRegistro() {
         String nombre = txtNombre.getText();
+        String apellidos = txtApellidos.getText();
         String dni = txtDNI.getText();
         String email = txtEmail.getText();
         String pass = new String(txtPassword.getPassword());
         String conf = new String(txtConfirmar.getPassword());
         String rol = (String) comboRol.getSelectedItem();
+        String extra1 = txtExtra1.getText();
+        String extra2 = txtExtra2.getText();
 
-        if (nombre.isEmpty() || dni.isEmpty() || email.isEmpty() || pass.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Rellene todos los campos.");
+        if (nombre.isEmpty() || apellidos.isEmpty() || dni.isEmpty() || email.isEmpty() || pass.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Rellene todos los campos obligatorios.");
             return;
         }
 
@@ -128,46 +183,60 @@ public class Registro extends JFrame implements ActionListener {
             return;
         }
 
-        Usuario nuevoUsuario = new Usuario();
-        nuevoUsuario.setUsername(dni);
-        nuevoUsuario.setEmail(email);
-        nuevoUsuario.setPassword(pass);
-        nuevoUsuario.setRol(rol);
-
         try {
-            if (rol.equals("alumno")) {
-                Alumno nuevoAlumno = new Alumno(nombre, email);
-                AlumnoDAO alumnoDAO = new AlumnoDAOImpl();
-                int idAlumno = alumnoDAO.insertar(nuevoAlumno);
-                nuevoUsuario.setAlumnoId(idAlumno);
-            } else if (rol.equals("profesor")) {
-                Profesor nuevoProfesor = new Profesor(nombre, email);
-                ProfesorDAO profesorDAO = new ProfesorDAOImpl();
-                int idProfesor = profesorDAO.insertar(nuevoProfesor);
-                nuevoUsuario.setProfesorId(idProfesor);
+            // 1. Crear el objeto Usuario (o su subclase)
+            Usuario u;
+            if ("alumno".equals(rol)) {
+                Alumno a = new Alumno();
+                a.setBeca(extra1);
+                a.setPromocion(extra2);
+                u = a;
+            } else {
+                Profesor p = new Profesor();
+                p.setDepartamento(extra1);
+                p.setEspecialidad(extra2);
+                u = p;
             }
 
+            // Configurar campos comunes
+            u.setUsername(dni);
+            u.setPassword(pass);
+            u.setEmail(email);
+            u.setNombre(nombre);
+            u.setApellidos(apellidos);
+            u.setDni(dni);
+            u.setRol(rol);
+
+            // 2. Transacción de Registro
             UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
-            usuarioDAO.registrar(nuevoUsuario);
+            int idGenerado = usuarioDAO.registrar(u);
             
-            JOptionPane.showMessageDialog(this, "Usuario y " + rol + " registrados con éxito.");
-            this.dispose();
+            if (idGenerado > 0) {
+                u.setId(idGenerado);
+                if (u instanceof Alumno) {
+                    new AlumnoDAOImpl().insertar((Alumno) u);
+                } else if (u instanceof Profesor) {
+                    new ProfesorDAOImpl().insertar((Profesor) u);
+                }
+                JOptionPane.showMessageDialog(this, "¡Éxito! " + rol + " registrado correctamente.");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al obtener ID de usuario.");
+            }
+
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al registrar: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error de base de datos: " + ex.getMessage());
         }
     }
-    // Añadimos el método main para poder ejecutar la interfaz desde aquí
-    // y probarla sin necesidad de ejecutar el login
+
     public static void main(String[] args) {
-        // Iniciamos la interfaz en el hilo de despacho de eventos
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                Registro frame = new Registro();
-                // Opcional: Cambiamos el comportamiento de cierre solo para esta prueba
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setVisible(true);
-            }
+        // Establecer Look & Feel System para que se vea más profesional
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
+        
+        SwingUtilities.invokeLater(() -> {
+            new Registro().setVisible(true);
         });
     }
-
 }

@@ -1,54 +1,38 @@
 package model;
 
-public class Profesor {
-    private int id;
-    private String nombre;
-    private String email;
+public class Profesor extends Usuario {
+    private String departamento;
+    private String especialidad;
 
     public Profesor() {
+        super();
     }
 
-    public Profesor(int id, String nombre, String email) {
-        this.id = id;
-        this.nombre = nombre;
-        this.email = email;
+    public Profesor(String departamento, String especialidad) {
+        this.departamento = departamento;
+        this.especialidad = especialidad;
     }
 
-    public Profesor(String nombre, String email) {
-        this.nombre = nombre;
-        this.email = email;
+    public Profesor(int id, String username, String password, String email, String nombre, String apellidos, String dni, String rol, String departamento, String especialidad) {
+        super(id, username, password, email, nombre, apellidos, dni, rol);
+        this.departamento = departamento;
+        this.especialidad = especialidad;
     }
 
-    public int getId() {
-        return id;
-    }
+    public String getDepartamento() { return departamento; }
+    public void setDepartamento(String departamento) { this.departamento = departamento; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getEspecialidad() { return especialidad; }
+    public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
 
     @Override
     public String toString() {
         return "Profesor{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", email='" + email + '\'' +
+                "id=" + getId() +
+                ", nombre='" + getNombre() + '\'' +
+                ", apellidos='" + getApellidos() + '\'' +
+                ", departamento='" + departamento + '\'' +
+                ", especialidad='" + especialidad + '\'' +
                 '}';
     }
 }

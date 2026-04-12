@@ -1,6 +1,3 @@
-Aquí tienes el enunciado completo y definitivo en formato **.md**. He integrado la nueva lógica de base de datos con la relación entre usuarios y alumnos, la estructura de paquetes y las especificaciones de la interfaz gráfica profesional.
-
-```markdown
 # 📦 Proyecto Final: Sistema de Gestión Académica (JDBC + DAO + Swing)
 
 > 🎯 **Objetivo:**
@@ -26,63 +23,66 @@ src/
 
 ## 📋 2. Diseño de la Base de Datos (`universidad_db`)
 
-La base de datos separa la identidad académica de las credenciales de acceso, vinculándolas mediante claves foráneas opcionales.
+El sistema utiliza un modelo de herencia de tablas (**Joined Table Inheritance**) para gestionar los diferentes perfiles de usuario.
 
 ### Script SQL de creación:
 ```sql
 CREATE DATABASE IF NOT EXISTS universidad_db;
 USE universidad_db;
 
--- 1. Tabla de alumnos (Datos maestros)
-CREATE TABLE alumnos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE
-);
-
--- 2. Tabla de profesores
-CREATE TABLE profesores (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE
-);
-
--- 3. Tabla de usuarios (Credenciales y Seguridad)
+-- 1. Tabla base para todos los usuarios
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE, -- DNI del usuario
+    username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    alumno_id INT UNIQUE, -- Relación opcional con alumnos
-    profesor_id INT UNIQUE, -- Relación opcional con profesores
-    rol ENUM('alumno', 'profesor') NOT NULL DEFAULT 'alumno',
-    CONSTRAINT fk_usuario_alumno FOREIGN KEY (alumno_id) 
-        REFERENCES alumnos(id) ON DELETE SET NULL,
-    CONSTRAINT fk_usuario_profesor FOREIGN KEY (profesor_id) 
-        REFERENCES profesores(id) ON DELETE SET NULL
+    email VARCHAR(100) NOT NULL UNIQUE,
+    nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    dni VARCHAR(20) NOT NULL UNIQUE,
+    rol ENUM('alumno', 'profesor') NOT NULL DEFAULT 'alumno'
 );
 
--- 3. Tabla de cursos
+-- 2. Tabla especializada para alumnos
+CREATE TABLE alumnos (
+    usuario_id INT PRIMARY KEY,
+    beca VARCHAR(50) DEFAULT 'Ninguna',
+    promocion VARCHAR(20),
+    CONSTRAINT fk_alumno_usuario FOREIGN KEY (usuario_id) 
+        REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- 3. Tabla especializada para profesores
+CREATE TABLE profesores (
+    usuario_id INT PRIMARY KEY,
+    departamento VARCHAR(100),
+    especialidad VARCHAR(100),
+    CONSTRAINT fk_profesor_usuario FOREIGN KEY (usuario_id) 
+        REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- 4. Tabla de cursos
 CREATE TABLE cursos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(150) NOT NULL,
     creditos INT NOT NULL
 );
 
--- 4. Tabla de matrículas (Relación N:M)
+-- 5. Tabla de matrículas (Relación N:M)
 CREATE TABLE matriculas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     alumno_id INT NOT NULL,
     curso_id INT NOT NULL,
     fecha_matricula DATE NOT NULL,
     CONSTRAINT fk_mat_alumno FOREIGN KEY (alumno_id) 
-        REFERENCES alumnos(id) ON DELETE CASCADE,
+        REFERENCES alumnos(usuario_id) ON DELETE CASCADE,
     CONSTRAINT fk_mat_curso FOREIGN KEY (curso_id) 
         REFERENCES cursos(id) ON DELETE CASCADE
 );
 
 -- Datos iniciales
-INSERT INTO usuarios (username, password, email) VALUES ('admin', '1234', 'admin@universidad.com');
+INSERT INTO usuarios (username, password, email, nombre, apellidos, dni, rol) 
+VALUES ('admin', '1234', 'admin@universidad.com', 'Admin', 'Sistema', '00000000T', 'profesor');
+INSERT INTO profesores (usuario_id, departamento, especialidad) VALUES (1, 'Administración', 'Gestión');
 ```
 
 ---
@@ -91,85 +91,57 @@ INSERT INTO usuarios (username, password, email) VALUES ('admin', '1234', 'admin
 
 ### A. Ventana de Acceso (`Login.java`)
 - **Componentes:** Campos para usuario, contraseña (`JPasswordField`), botón de acceso y registro.
-- **Lógica:** Valida credenciales en la tabla `usuarios`. Si existe un `alumno_id` asociado, el sistema debe reconocer al alumno vinculado tras el inicio de sesión.
+- **Lógica:** Valida credenciales en la tabla `usuarios`. El sistema debe identificar el rol y cargar el perfil completo realizando el JOIN correspondiente.
 
 ### B. Ventana de Registro (`Registro.java`)
-- **Componentes:** Formulario extendido (Nombre y Apellidos, DNI, Email, Password y Confirmación). 
-- **Mapeo:** El campo **DNI** actúa como `username` para el login.
-- **Selector de Rol:** `JComboBox` para elegir entre Alumno o Profesor.
-- **Lógica de Vinculación:** Al registrarse, el sistema debe primero crear la entidad académica (inserción en `alumnos` o `profesores`) y posteriormente crear el `usuario` vinculado mediante el ID correspondiente.
+- **Componentes:** Formulario con Nombre, Apellidos, DNI, Email, Contraseña y Selector de Rol.
+- **Campos Dinámicos:** Al seleccionar el rol, la interfaz debe mostrar campos específicos (Beca/Promoción para alumnos; Departamento/Especialidad para profesores).
+- **Lógica de Transacción:** El proceso de registro debe ser atómico:
+    1. Insertar en `usuarios` y obtener el ID generado.
+    2. Insertar en la tabla especializada (`alumnos` o `profesores`) usando dicho ID.
 
 ### C. Ventana Principal de Gestión (`Principal.java`)
-Es el panel de control del administrativo o alumno. Debe incluir:
-
-1.  **Barra de Menús (`JMenuBar`):** Opciones para cerrar sesión, salir, cambiar preferencias de color y ayuda.
-2.  **Navegación Lateral:** Botones para alternar entre "Gestión Alumnos", "Gestión Cursos" y "Nueva Matrícula".
-3.  **Área Central:** * Un `JTable` dinámico que muestre los datos según la opción seleccionada.
-    * Un `JTextArea` inferior (Consola) para mostrar logs del sistema (ej: "Conexión OK", "Registro guardado").
-4.  **Panel de Operaciones:** Formulario lateral con campos de texto y botones (Guardar, Actualizar, Eliminar) para manipular los registros seleccionados.
+Es el panel de control del centro educativo. Debe incluir:
+1.  **Barra de Menús (`JMenuBar`):** Gestión de sesión y preferencias.
+2.  **Navegación Lateral:** Alternar entre "Gestión Alumnos", "Gestión Cursos" y "Nueva Matrícula".
+3.  **Área Central:** `JTable` dinámico con los datos.
+4.  **Panel de Operaciones:** Formulario dinámico para CRUD que respete la estructura de herencia (actualiza ambas tablas).
 
 ---
 
 ## 📑 4. Contratos de Persistencia (Capa DAO)
 
-Implementación obligatoria de las siguientes interfaces:
+Las interfaces deben reflejar el modelo de herencia:
 
 ```java
 public interface UsuarioDAO {
-    // SQL: SELECT id, rol, alumno_id, profesor_id FROM usuarios WHERE username = ? AND password = ?
+    // Valida credenciales y retorna true si existe
     boolean validar(String user, String pass) throws SQLException;
     
-    // SQL: INSERT INTO usuarios (username, password, email, rol, alumno_id, profesor_id) VALUES (?, ?, ?, ?, ?, ?)
-    void registrar(Usuario usuario) throws SQLException;
-    
-    // Opcional: obtener usuario con los datos del alumno vinculado
-    // SQL: SELECT u.*, a.nombre AS nombre_alumno, a.email AS email_alumno FROM usuarios u LEFT JOIN alumnos a ON u.alumno_id = a.id WHERE u.username = ?
+    // Inserta datos base y retorna el ID generado
+    int registrar(Usuario usuario) throws SQLException;
 }
 
 public interface AlumnoDAO {
-    // SQL: INSERT INTO alumnos (nombre, email) VALUES (?, ?)
-    int insertar(Alumno a) throws SQLException; // Debe retornar el ID generado
+    // Inserta en la tabla alumnos vinculando al usuario_id
+    int insertar(Alumno a) throws SQLException;
     
-    // SQL: UPDATE alumnos SET nombre = ?, email = ? WHERE id = ?
+    // Actualiza tanto campos base (usuarios) como especializados (alumnos)
     void actualizar(Alumno a) throws SQLException;
     
-    // SQL: DELETE FROM alumnos WHERE id = ?
-    void eliminar(int id) throws SQLException;
-    
-    // SQL: SELECT id, nombre, email FROM alumnos
+    // Consulta con JOIN para obtener objeto Alumno completo
     List<Alumno> listarTodos() throws SQLException;
 }
 
-public interface ProfesorDAO {
-    // SQL: INSERT INTO profesores (nombre, email) VALUES (?, ?)
-    int insertar(Profesor p) throws SQLException; // Debe retornar el ID generado
-    
-    // SQL: UPDATE profesores SET nombre = ?, email = ? WHERE id = ?
-    void actualizar(Profesor p) throws SQLException;
-    
-    // SQL: DELETE FROM profesores WHERE id = ?
-    void eliminar(int id) throws SQLException;
-    
-    // SQL: SELECT id, nombre, email FROM profesores
-    List<Profesor> listarTodos() throws SQLException;
-}
-
-public interface MatriculaDAO {
-    // SQL: INSERT INTO matriculas (alumno_id, curso_id, fecha_matricula) VALUES (?, ?, ?)
-    void matricular(int aluId, int curId) throws SQLException; // Transaccional
-    
-    // SQL: SELECT m.id, a.nombre AS alumno, c.titulo AS curso, m.fecha_matricula FROM matriculas m JOIN alumnos a ON m.alumno_id = a.id JOIN cursos c ON m.curso_id = c.id
-    List<MatriculaDTO> listarMatriculasDetalladas() throws SQLException; // SQL JOIN
-}
+// Interfaz ProfesorDAO sigue un patrón idéntico a AlumnoDAO
 ```
 
 ---
 
 ## 🟢 5. Criterios de Evaluación y Calidad
 
-1.  **MVC Real:** Las vistas (`view`) no contienen lógica SQL. Todas las peticiones pasan por los `DAO`.
-2.  **Seguridad:** Uso estricto de `PreparedStatement` para prevenir Inyección SQL.
-3.  **Integridad de Datos:** Uso de `setAutoCommit(false)`, `commit()` y `rollback()` en el proceso de matriculación.
-4.  **Feedback:** Uso de `JOptionPane` para errores y avisos críticos; uso de la consola de la `Principal` para mensajes de estado.
-5.  **Código Limpio:** Implementación de `try-with-resources` para el cierre automático de conexiones y flujos.
-```
+1.  **Modelo de Herencia:** Implementación correcta de `Joined Table inheritance` tanto en DB como en POJOs (`extends`).
+2.  **Integridad:** Uso de claves foráneas y `ON DELETE CASCADE`.
+3.  **Transaccionalidad:** Los procesos que involucren múltiples tablas (como el Registro o la Matrícula) deben usar transacciones manuales.
+4.  **Desacoplamiento:** Las vistas no conocen la estructura de las tablas; toda comunicación es vía objetos de dominio a través de los DAO.
+5.  **Código Limpio:** Uso de `try-with-resources` y nombres de variables descriptivos en español/inglés coherente.

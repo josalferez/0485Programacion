@@ -22,10 +22,11 @@ public class Principal extends JFrame implements ActionListener {
     private DefaultTableModel modeloTabla;
     private JTextArea txtConsola;
     
-    private JTextField txtCampo1, txtCampo2; // Para Nombre/Email o Titulo/Créditos
-    private JLabel lblCampo1, lblCampo2;
+    private JTextField txtCampo1, txtCampo2, txtCampo3; // Para Nombre/Email/DNI o Titulo/Créditos
+    private JLabel lblCampo1, lblCampo2, lblCampo3;
 
     private int modoActual = 0; // 1: Alumnos, 2: Cursos, 3: Matrículas
+    private int idSeleccionado = -1; // ID del registro seleccionado para edición
     private AlumnoDAO alumnoDAO = new AlumnoDAOImpl();
     private CursoDAO cursoDAO = new CursoDAOImpl();
     private MatriculaDAO matriculaDAO = new MatriculaDAOImpl();
@@ -96,6 +97,17 @@ public class Principal extends JFrame implements ActionListener {
         // Tabla
         modeloTabla = new DefaultTableModel();
         tablaDatos = new JTable(modeloTabla);
+        tablaDatos.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && modoActual == 1) {
+                int fila = tablaDatos.getSelectedRow();
+                if (fila != -1) {
+                    idSeleccionado = (int) modeloTabla.getValueAt(fila, 0);
+                    txtCampo1.setText((String) modeloTabla.getValueAt(fila, 1));
+                    txtCampo2.setText((String) modeloTabla.getValueAt(fila, 2));
+                    txtCampo3.setText((String) modeloTabla.getValueAt(fila, 3));
+                }
+            }
+        });
         JScrollPane scrollTabla = new JScrollPane(tablaDatos);
 
         // Consola de estado
@@ -123,15 +135,19 @@ public class Principal extends JFrame implements ActionListener {
         txtCampo1 = new JTextField(18); // Tamaño del campo de texto
         lblCampo2 = new JLabel("Email / Créditos:");
         txtCampo2 = new JTextField(18);
+        lblCampo3 = new JLabel("DNI:");
+        txtCampo3 = new JTextField(18);
         lblCampo1.setBounds(10, 20, 100, 20);
         txtCampo1.setBounds(120, 20, 200, 20);
         lblCampo2.setBounds(10, 50, 100, 20);
-        txtCampo2.setBounds(120, 50, 200, 20);  
+        txtCampo2.setBounds(120, 50, 200, 20);
+        lblCampo3.setBounds(10, 80, 100, 20);
+        txtCampo3.setBounds(120, 80, 200, 20);  
 
         btnGuardar = new JButton("Guardar Registro");
         btnEliminar = new JButton("Eliminar Seleccionado");
-        btnGuardar.setBounds(10, 80, 150, 30);
-        btnEliminar.setBounds(170, 80, 150, 30);
+        btnGuardar.setBounds(10, 110, 150, 30);
+        btnEliminar.setBounds(170, 110, 150, 30);
         
         btnGuardar.addActionListener(this);
         btnEliminar.addActionListener(this);
@@ -140,6 +156,8 @@ public class Principal extends JFrame implements ActionListener {
         panelDerecho.add(txtCampo1);
         panelDerecho.add(lblCampo2);
         panelDerecho.add(txtCampo2);
+        panelDerecho.add(lblCampo3);
+        panelDerecho.add(txtCampo3);
         panelDerecho.add(btnGuardar);
         panelDerecho.add(btnEliminar);
 
@@ -153,21 +171,28 @@ public class Principal extends JFrame implements ActionListener {
 
     private void cargarAlumnos() {
         modoActual = 1;
+        idSeleccionado = -1;
+        txtCampo1.setText("");
+        txtCampo2.setText("");
+        txtCampo3.setText("");
         setLayout(null);
         lblCampo1.setText("Nombre:");
         lblCampo2.setText("Email:");
+        lblCampo3.setText("DNI:");
         lblCampo1.setBounds(10, 20, 100, 20);
         txtCampo1.setBounds(120, 20, 200, 20);
         lblCampo2.setBounds(10, 50, 100, 20);
         txtCampo2.setBounds(120, 50, 200, 20);
-        btnGuardar.setBounds(10, 80, 150, 30);
-        btnEliminar.setBounds(170, 80, 150, 30);
-        modeloTabla.setColumnIdentifiers(new String[]{"ID", "Nombre", "Email"});
+        lblCampo3.setBounds(10, 80, 100, 20);
+        txtCampo3.setBounds(120, 80, 200, 20);
+        btnGuardar.setBounds(10, 110, 150, 30);
+        btnEliminar.setBounds(170, 110, 150, 30);
+        modeloTabla.setColumnIdentifiers(new String[]{"ID", "Nombre", "Email", "DNI"});
         modeloTabla.setRowCount(0);
         try {
             List<Alumno> lista = alumnoDAO.listarTodos();
             for (Alumno a : lista) {
-                modeloTabla.addRow(new Object[]{a.getId(), a.getNombre(), a.getEmail()});
+                modeloTabla.addRow(new Object[]{a.getId(), a.getNombre(), a.getEmail(), a.getDni()});
             }
             log("Alumnos cargados correctamente.");
         } catch (SQLException e) {
@@ -177,6 +202,10 @@ public class Principal extends JFrame implements ActionListener {
 
     private void cargarCursos() {
         modoActual = 2;
+        idSeleccionado = -1;
+        txtCampo1.setText("");
+        txtCampo2.setText("");
+        txtCampo3.setText("");
         lblCampo1.setText("Título:");
         lblCampo2.setText("Créditos:");
         modeloTabla.setColumnIdentifiers(new String[]{"ID", "Título", "Créditos"});
@@ -194,6 +223,10 @@ public class Principal extends JFrame implements ActionListener {
 
     private void cargarMatriculas() {
         modoActual = 3;
+        idSeleccionado = -1;
+        txtCampo1.setText("");
+        txtCampo2.setText("");
+        txtCampo3.setText("");
         modeloTabla.setColumnIdentifiers(new String[]{"Alumno", "Curso", "Fecha"});
         modeloTabla.setRowCount(0);
         try {
@@ -210,9 +243,16 @@ public class Principal extends JFrame implements ActionListener {
     private void ejecutarGuardar() {
         try {
             if (modoActual == 1) { // Alumno
-                Alumno a = new Alumno(txtCampo1.getText(), txtCampo2.getText());
-                alumnoDAO.insertar(a);
-                log("Alumno guardado.");
+                Alumno a;
+                if (idSeleccionado != -1) {
+                    a = new Alumno(idSeleccionado, txtCampo1.getText(), txtCampo2.getText(), txtCampo3.getText());
+                    alumnoDAO.actualizar(a);
+                    log("Alumno actualizado.");
+                } else {
+                    a = new Alumno(txtCampo1.getText(), txtCampo2.getText(), txtCampo3.getText());
+                    alumnoDAO.insertar(a);
+                    log("Alumno guardado.");
+                }
                 cargarAlumnos();
             } else if (modoActual == 2) { // Curso
                 Curso c = new Curso(txtCampo1.getText(), Integer.parseInt(txtCampo2.getText()));
@@ -222,6 +262,8 @@ public class Principal extends JFrame implements ActionListener {
             }
             txtCampo1.setText("");
             txtCampo2.setText("");
+            txtCampo3.setText("");
+            idSeleccionado = -1;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage());
         }

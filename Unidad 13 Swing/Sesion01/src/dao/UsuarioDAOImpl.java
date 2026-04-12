@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import db.ConexionDB;
 import model.Usuario;
 
@@ -19,39 +20,33 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             pstmt.setString(2, pass);
             
             try (ResultSet rs = pstmt.executeQuery()) {
-                return rs.next(); // Retorna true si existe el usuario
+                return rs.next();
             }
         }
     }
 
     @Override
-    public void registrar(Usuario usuario) throws SQLException {
-        // Aseguramos que los nombres de las columnas sean 'alumno_id' y 'profesor_id'
-        String sql = "INSERT INTO usuarios (username, password, email, alumno_id, profesor_id, rol) VALUES (?, ?, ?, ?, ?, ?)";
+    public int registrar(Usuario usuario) throws SQLException {
+        String sql = "INSERT INTO usuarios (username, password, email, nombre, apellidos, dni, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConexionDB.conectar();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             pstmt.setString(1, usuario.getUsername());
             pstmt.setString(2, usuario.getPassword());
             pstmt.setString(3, usuario.getEmail());
-            
-            // Vincular ID de Alumno (si existe)
-            if (usuario.getAlumnoId() != null) {
-                pstmt.setInt(4, usuario.getAlumnoId());
-            } else {
-                pstmt.setNull(4, java.sql.Types.INTEGER);
-            }
-
-            // Vincular ID de Profesor (si existe)
-            if (usuario.getProfesorId() != null) {
-                pstmt.setInt(5, usuario.getProfesorId());
-            } else {
-                pstmt.setNull(5, java.sql.Types.INTEGER);
-            }
-
-            pstmt.setString(6, usuario.getRol());
+            pstmt.setString(4, usuario.getNombre());
+            pstmt.setString(5, usuario.getApellidos());
+            pstmt.setString(6, usuario.getDni());
+            pstmt.setString(7, usuario.getRol());
             
             pstmt.executeUpdate();
+            
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
         }
+        return -1;
     }
 }
