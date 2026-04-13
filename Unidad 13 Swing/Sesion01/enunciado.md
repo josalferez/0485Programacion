@@ -78,11 +78,6 @@ CREATE TABLE matriculas (
     CONSTRAINT fk_mat_curso FOREIGN KEY (curso_id) 
         REFERENCES cursos(id) ON DELETE CASCADE
 );
-
--- Datos iniciales
-INSERT INTO usuarios (username, password, email, nombre, apellidos, dni, rol) 
-VALUES ('admin', '1234', 'admin@universidad.com', 'Admin', 'Sistema', '00000000T', 'profesor');
-INSERT INTO profesores (usuario_id, departamento, especialidad) VALUES (1, 'Administración', 'Gestión');
 ```
 
 ---
@@ -91,57 +86,55 @@ INSERT INTO profesores (usuario_id, departamento, especialidad) VALUES (1, 'Admi
 
 ### A. Ventana de Acceso (`Login.java`)
 - **Componentes:** Campos para usuario, contraseña (`JPasswordField`), botón de acceso y registro.
-- **Lógica:** Valida credenciales en la tabla `usuarios`. El sistema debe identificar el rol y cargar el perfil completo realizando el JOIN correspondiente.
+- **Lógica:** Valida credenciales en la tabla `usuarios`.
 
 ### B. Ventana de Registro (`Registro.java`)
 - **Componentes:** Formulario con Nombre, Apellidos, DNI, Email, Contraseña y Selector de Rol.
-- **Campos Dinámicos:** Al seleccionar el rol, la interfaz debe mostrar campos específicos (Beca/Promoción para alumnos; Departamento/Especialidad para profesores).
-- **Lógica de Transacción:** El proceso de registro debe ser atómico:
-    1. Insertar en `usuarios` y obtener el ID generado.
-    2. Insertar en la tabla especializada (`alumnos` o `profesores`) usando dicho ID.
+- **Campos Dinámicos:** Muestra campos de Alumno/Profesor según selección.
+- **Lógica de Transacción:** Registro atómico en dos tablas.
 
 ### C. Ventana Principal de Gestión (`Principal.java`)
-Es el panel de control del centro educativo. Debe incluir:
-1.  **Barra de Menús (`JMenuBar`):** Gestión de sesión y preferencias.
-2.  **Navegación Lateral:** Alternar entre "Gestión Alumnos", "Gestión Cursos" y "Nueva Matrícula".
-3.  **Área Central:** `JTable` dinámico con los datos.
-4.  **Panel de Operaciones:** Formulario dinámico para CRUD que respete la estructura de herencia (actualiza ambas tablas).
+Es el panel de control del centro educativo. Debe implementar una interfaz dinámica:
+1.  **Barra de Menús (`JMenuBar`):** Gestión de sesión, cambio de color y logout.
+2.  **Navegación Lateral:** Botones para "Gestión Alumnos", "Gestión Cursos", "Gestionar Matrículas" y "Gestión Usuarios".
+3.  **Área Central:** `JTable` que muestra los datos del módulo activo (JOINs para matrículas, lista de usuarios, etc.).
+4.  **Panel de Operaciones (Dashboard Inteligente):** 
+    - Formulario lateral que adapta sus etiquetas y visibilidad automáticamente.
+    - Para **Usuarios**: Debe mostrar 7 campos (Username, Email, DNI, Nombre, Apellidos, Password y Selector de Rol).
+    - Para **Alumnos/Cursos**: Debe simplificarse ocultando los campos extra para mantener la ergonomía.
 
 ---
 
 ## 📑 4. Contratos de Persistencia (Capa DAO)
 
-Las interfaces deben reflejar el modelo de herencia:
+Las interfaces deben reflejar el modelo de herencia y el soporte para el dashboard:
 
 ```java
 public interface UsuarioDAO {
-    // Valida credenciales y retorna true si existe
+    // Acceso y Registro
     boolean validar(String user, String pass) throws SQLException;
-    
-    // Inserta datos base y retorna el ID generado
     int registrar(Usuario usuario) throws SQLException;
+    
+    // Gestión integral (Principal)
+    List<Usuario> listarTodos() throws SQLException;
+    void actualizar(Usuario usuario) throws SQLException;
+    void eliminar(int id) throws SQLException;
 }
 
 public interface AlumnoDAO {
-    // Inserta en la tabla alumnos vinculando al usuario_id
     int insertar(Alumno a) throws SQLException;
-    
-    // Actualiza tanto campos base (usuarios) como especializados (alumnos)
     void actualizar(Alumno a) throws SQLException;
-    
-    // Consulta con JOIN para obtener objeto Alumno completo
     List<Alumno> listarTodos() throws SQLException;
+    void eliminar(int id) throws SQLException;
 }
-
-// Interfaz ProfesorDAO sigue un patrón idéntico a AlumnoDAO
 ```
 
 ---
 
 ## 🟢 5. Criterios de Evaluación y Calidad
 
-1.  **Modelo de Herencia:** Implementación correcta de `Joined Table inheritance` tanto en DB como en POJOs (`extends`).
+1.  **Modelo de Herencia:** Implementación correcta de `Joined Table inheritance` (DB y POJOs).
 2.  **Integridad:** Uso de claves foráneas y `ON DELETE CASCADE`.
-3.  **Transaccionalidad:** Los procesos que involucren múltiples tablas (como el Registro o la Matrícula) deben usar transacciones manuales.
-4.  **Desacoplamiento:** Las vistas no conocen la estructura de las tablas; toda comunicación es vía objetos de dominio a través de los DAO.
-5.  **Código Limpio:** Uso de `try-with-resources` y nombres de variables descriptivos en español/inglés coherente.
+3.  **Interfaz Dinámica:** El panel de operaciones debe "reaccionar" al módulo seleccionado cambiando labels y visibilidad de componentes.
+4.  **Desacoplamiento:** Las vistas se comunican exclusivamente vía objetos de dominio a través de los DAO.
+5.  **Código Limpio:** Uso de `try-with-resources` y nombres descriptivos.

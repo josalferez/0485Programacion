@@ -22,20 +22,22 @@ public class Principal extends JFrame implements ActionListener {
     private DefaultTableModel modeloTabla;
     private JTextArea txtConsola;
     
-    private JTextField txtCampo1, txtCampo2, txtCampo3; // Para Nombre/Email/DNI o Titulo/Créditos
-    private JLabel lblCampo1, lblCampo2, lblCampo3;
+    private JTextField txtCampo1, txtCampo2, txtCampo3, txtCampo4, txtCampo5, txtCampo6;
+    private JLabel lblCampo1, lblCampo2, lblCampo3, lblCampo4, lblCampo5, lblCampo6, lblRol;
+    private JComboBox<String> comboRol;
 
-    private int modoActual = 0; // 1: Alumnos, 2: Cursos, 3: Matrículas
-    private int idSeleccionado = -1; // ID del registro seleccionado para edición
+    private int modoActual = 0; // 1: Alumnos, 2: Cursos, 3: Matrículas, 4: Usuarios
+    private int idSeleccionado = -1; 
     private AlumnoDAO alumnoDAO = new AlumnoDAOImpl();
     private CursoDAO cursoDAO = new CursoDAOImpl();
     private MatriculaDAO matriculaDAO = new MatriculaDAOImpl();
+    private UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
 
     public Principal() {
         setTitle("Sistema de Gestión Académica - Universidad DB");
-        setSize(1250, 700);
+        setSize(1250, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10)); // Divide el panel en 5 zonas y las separa 10px horizontal y 10px vertical
+        setLayout(new BorderLayout(10, 10));
 
         initMenu();
         initPanelNavegacion();
@@ -50,6 +52,7 @@ public class Principal extends JFrame implements ActionListener {
         
         menuArchivo = new JMenu("Archivo");
         itemCerrarSesion = new JMenuItem("Cerrar Sesión");
+        itemCerrarSesion.addActionListener(this);
         itemSalir = new JMenuItem("Salir");
         itemSalir.addActionListener(e -> System.exit(0));
         menuArchivo.add(itemCerrarSesion);
@@ -62,6 +65,7 @@ public class Principal extends JFrame implements ActionListener {
 
         menuAyuda = new JMenu("Ayuda");
         itemAcerca = new JMenuItem("Acerca de...");
+        itemAcerca.addActionListener(this);
         menuAyuda.add(itemAcerca);
 
         menuBar.add(menuArchivo);
@@ -72,16 +76,15 @@ public class Principal extends JFrame implements ActionListener {
 
     private void initPanelNavegacion() {
         JPanel panelLateral = new JPanel();
-        panelLateral.setLayout(new GridLayout(6, 1, 0, 10) ); // 3 filas, 1 columna, 0px horizontal, 10px vertical
-        panelLateral.setBackground(new Color(45, 52, 54)); // Color de fondo del panel lateral
-        panelLateral.setPreferredSize(new Dimension(200, 0)); // Tamaño del panel lateral
+        panelLateral.setLayout(new GridLayout(6, 1, 0, 10) );
+        panelLateral.setBackground(new Color(45, 52, 54));
+        panelLateral.setPreferredSize(new Dimension(200, 0));
 
         btnAlumnos = new JButton("Gestión Alumnos");
         btnCursos = new JButton("Gestión Cursos");
-        btnMatriculas = new JButton("Ver Matrículas (JOIN)");
+        btnMatriculas = new JButton("Gestionar Matrículas");
         btnGestionUsuarios = new JButton("Gestión Usuarios");
 
-        // Estilo rápido para botones
         JButton[] botones = {btnAlumnos, btnCursos, btnMatriculas, btnGestionUsuarios};
         for (JButton b : botones) {
             b.addActionListener(this);
@@ -94,23 +97,42 @@ public class Principal extends JFrame implements ActionListener {
     private void initPanelCentral() {
         JPanel panelCentro = new JPanel(new BorderLayout(5, 5));
 
-        // Tabla
         modeloTabla = new DefaultTableModel();
         tablaDatos = new JTable(modeloTabla);
         tablaDatos.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && modoActual == 1) {
+            if (!e.getValueIsAdjusting()) {
                 int fila = tablaDatos.getSelectedRow();
                 if (fila != -1) {
                     idSeleccionado = (int) modeloTabla.getValueAt(fila, 0);
-                    txtCampo1.setText((String) modeloTabla.getValueAt(fila, 1));
-                    txtCampo2.setText((String) modeloTabla.getValueAt(fila, 2));
-                    txtCampo3.setText((String) modeloTabla.getValueAt(fila, 3));
+                    if (modoActual == 1) { // Alumnos
+                        txtCampo1.setText((String) modeloTabla.getValueAt(fila, 1));
+                        txtCampo2.setText((String) modeloTabla.getValueAt(fila, 2));
+                        txtCampo3.setText((String) modeloTabla.getValueAt(fila, 3));
+                    } else if (modoActual == 2) { // Cursos
+                        txtCampo1.setText((String) modeloTabla.getValueAt(fila, 1));
+                        txtCampo2.setText(String.valueOf(modeloTabla.getValueAt(fila, 2)));
+                    } else if (modoActual == 4) { // Usuarios
+                        try {
+                            Usuario u = usuarioDAO.obtenerPorId(idSeleccionado);
+                            if (u != null) {
+                                txtCampo1.setText(u.getUsername());
+                                txtCampo2.setText(u.getEmail());
+                                txtCampo3.setText(u.getDni());
+                                txtCampo4.setText(u.getNombre());
+                                txtCampo5.setText(u.getApellidos());
+                                txtCampo6.setText(u.getPassword());
+                                comboRol.setSelectedItem(u.getRol());
+                            }
+                        } catch (SQLException ex) {
+                            log("Error al recuperar usuario: " + ex.getMessage());
+                        }
+                    }
                 }
             }
         });
+        
         JScrollPane scrollTabla = new JScrollPane(tablaDatos);
 
-        // Consola de estado
         txtConsola = new JTextArea(5, 20);
         txtConsola.setEditable(false);
         txtConsola.setBackground(Color.BLACK);
@@ -131,38 +153,59 @@ public class Principal extends JFrame implements ActionListener {
         panelDerecho.setBorder(BorderFactory.createTitledBorder("Operaciones"));
         panelDerecho.setLayout(null);
 
-        lblCampo1 = new JLabel("Nombre / Título:");
-        txtCampo1 = new JTextField(18); // Tamaño del campo de texto
-        lblCampo2 = new JLabel("Email / Créditos:");
-        txtCampo2 = new JTextField(18);
-        lblCampo3 = new JLabel("DNI:");
-        txtCampo3 = new JTextField(18);
-        lblCampo1.setBounds(10, 20, 100, 20);
-        txtCampo1.setBounds(120, 20, 200, 20);
-        lblCampo2.setBounds(10, 50, 100, 20);
-        txtCampo2.setBounds(120, 50, 200, 20);
-        lblCampo3.setBounds(10, 80, 100, 20);
-        txtCampo3.setBounds(120, 80, 200, 20);  
+        lblCampo1 = new JLabel("Label 1:");
+        txtCampo1 = new JTextField();
+        lblCampo2 = new JLabel("Label 2:");
+        txtCampo2 = new JTextField();
+        lblCampo3 = new JLabel("Label 3:");
+        txtCampo3 = new JTextField();
+        lblCampo4 = new JLabel("Label 4:");
+        txtCampo4 = new JTextField();
+        lblCampo5 = new JLabel("Label 5:");
+        txtCampo5 = new JTextField();
+        lblCampo6 = new JLabel("Label 6:");
+        txtCampo6 = new JTextField();
+        lblRol = new JLabel("Rol:");
+        comboRol = new JComboBox<>(new String[]{"alumno", "profesor"});
+
+        int lx = 10, tx = 130, w = 250, h = 25, space = 35;
+        int y = 30;
+
+        JLabel[] labels = {lblCampo1, lblCampo2, lblCampo3, lblCampo4, lblCampo5, lblCampo6, lblRol};
+        JComponent[] fields = {txtCampo1, txtCampo2, txtCampo3, txtCampo4, txtCampo5, txtCampo6, comboRol};
+
+        for (int i = 0; i < labels.length; i++) {
+            labels[i].setBounds(lx, y, 110, h);
+            fields[i].setBounds(tx, y, w, h);
+            panelDerecho.add(labels[i]);
+            panelDerecho.add(fields[i]);
+            y += space;
+        }
 
         btnGuardar = new JButton("Guardar Registro");
         btnEliminar = new JButton("Eliminar Seleccionado");
-        btnGuardar.setBounds(10, 110, 150, 30);
-        btnEliminar.setBounds(170, 110, 150, 30);
+        btnGuardar.setBounds(lx, y + 10, 180, 40);
+        btnEliminar.setBounds(tx + 80, y + 10, 180, 40);
         
         btnGuardar.addActionListener(this);
         btnEliminar.addActionListener(this);
 
-        panelDerecho.add(lblCampo1);
-        panelDerecho.add(txtCampo1);
-        panelDerecho.add(lblCampo2);
-        panelDerecho.add(txtCampo2);
-        panelDerecho.add(lblCampo3);
-        panelDerecho.add(txtCampo3);
         panelDerecho.add(btnGuardar);
         panelDerecho.add(btnEliminar);
 
-        add(panelDerecho, BorderLayout.EAST); // Añadimos el panel derecho al frame
+        add(panelDerecho, BorderLayout.EAST);
+        setVisibilidadCamposExtra(false);
+    }
 
+    private void setVisibilidadCamposExtra(boolean visible) {
+        lblCampo4.setVisible(visible);
+        txtCampo4.setVisible(visible);
+        lblCampo5.setVisible(visible);
+        txtCampo5.setVisible(visible);
+        lblCampo6.setVisible(visible);
+        txtCampo6.setVisible(visible);
+        lblRol.setVisible(visible);
+        comboRol.setVisible(visible);
     }
 
     private void log(String msj) {
@@ -172,21 +215,15 @@ public class Principal extends JFrame implements ActionListener {
     private void cargarAlumnos() {
         modoActual = 1;
         idSeleccionado = -1;
-        txtCampo1.setText("");
-        txtCampo2.setText("");
-        txtCampo3.setText("");
-        setLayout(null);
+        limpiarCampos();
+        setVisibilidadCamposExtra(false);
+        txtCampo3.setVisible(true);
+        lblCampo3.setVisible(true);
+
         lblCampo1.setText("Nombre:");
         lblCampo2.setText("Email:");
         lblCampo3.setText("DNI:");
-        lblCampo1.setBounds(10, 20, 100, 20);
-        txtCampo1.setBounds(120, 20, 200, 20);
-        lblCampo2.setBounds(10, 50, 100, 20);
-        txtCampo2.setBounds(120, 50, 200, 20);
-        lblCampo3.setBounds(10, 80, 100, 20);
-        txtCampo3.setBounds(120, 80, 200, 20);
-        btnGuardar.setBounds(10, 110, 150, 30);
-        btnEliminar.setBounds(170, 110, 150, 30);
+
         modeloTabla.setColumnIdentifiers(new String[]{"ID", "Nombre", "Email", "DNI"});
         modeloTabla.setRowCount(0);
         try {
@@ -203,11 +240,15 @@ public class Principal extends JFrame implements ActionListener {
     private void cargarCursos() {
         modoActual = 2;
         idSeleccionado = -1;
-        txtCampo1.setText("");
-        txtCampo2.setText("");
-        txtCampo3.setText("");
+        limpiarCampos();
+        setVisibilidadCamposExtra(false);
+        
         lblCampo1.setText("Título:");
         lblCampo2.setText("Créditos:");
+        lblCampo3.setText("");
+        txtCampo3.setVisible(false);
+        lblCampo3.setVisible(false);
+
         modeloTabla.setColumnIdentifiers(new String[]{"ID", "Título", "Créditos"});
         modeloTabla.setRowCount(0);
         try {
@@ -224,9 +265,11 @@ public class Principal extends JFrame implements ActionListener {
     private void cargarMatriculas() {
         modoActual = 3;
         idSeleccionado = -1;
-        txtCampo1.setText("");
-        txtCampo2.setText("");
-        txtCampo3.setText("");
+        limpiarCampos();
+        setVisibilidadCamposExtra(false);
+        txtCampo3.setVisible(false);
+        lblCampo3.setVisible(false);
+
         modeloTabla.setColumnIdentifiers(new String[]{"Alumno", "Curso", "Fecha"});
         modeloTabla.setRowCount(0);
         try {
@@ -234,101 +277,161 @@ public class Principal extends JFrame implements ActionListener {
             for (MatriculaDTO m : lista) {
                 modeloTabla.addRow(new Object[]{m.getNombreAlumno(), m.getTituloCurso(), m.getFecha()});
             }
-            log("Matrículas (JOIN) cargadas correctamente.");
+            log("Matrículas cargadas correctamente.");
         } catch (SQLException e) {
             log("Error al cargar matrículas: " + e.getMessage());
         }
     }
 
+    private void cargarUsuarios() {
+        modoActual = 4;
+        idSeleccionado = -1;
+        limpiarCampos();
+        setVisibilidadCamposExtra(true);
+        txtCampo3.setVisible(true);
+        lblCampo3.setVisible(true);
+
+        lblCampo1.setText("Username:");
+        lblCampo2.setText("Email:");
+        lblCampo3.setText("DNI:");
+        lblCampo4.setText("Nombre:");
+        lblCampo5.setText("Apellidos:");
+        lblCampo6.setText("Password:");
+        lblRol.setText("Rol:");
+
+        modeloTabla.setColumnIdentifiers(new String[]{"ID", "Username", "Email", "Rol"});
+        modeloTabla.setRowCount(0);
+        try {
+            List<Usuario> lista = usuarioDAO.listarTodos();
+            for (Usuario u : lista) {
+                modeloTabla.addRow(new Object[]{u.getId(), u.getUsername(), u.getEmail(), u.getRol()});
+            }
+            log("Usuarios cargados correctamente.");
+        } catch (SQLException e) {
+            log("Error al cargar usuarios: " + e.getMessage());
+        }
+    }
+
+    private void limpiarCampos() {
+        txtCampo1.setText("");
+        txtCampo2.setText("");
+        txtCampo3.setText("");
+        txtCampo4.setText("");
+        txtCampo5.setText("");
+        txtCampo6.setText("");
+        txtCampo1.setVisible(true);
+        txtCampo2.setVisible(true);
+        txtCampo3.setVisible(true);
+        lblCampo1.setVisible(true);
+        lblCampo2.setVisible(true);
+        lblCampo3.setVisible(true);
+    }
+
     private void ejecutarGuardar() {
         try {
             if (modoActual == 1) { // Alumno
-                Alumno a;
+                Alumno a = new Alumno();
+                a.setNombre(txtCampo1.getText());
+                a.setEmail(txtCampo2.getText());
+                a.setDni(txtCampo3.getText());
+                
                 if (idSeleccionado != -1) {
-                    a = new Alumno(idSeleccionado, txtCampo1.getText(), txtCampo2.getText(), txtCampo3.getText());
+                    a.setId(idSeleccionado);
                     alumnoDAO.actualizar(a);
                     log("Alumno actualizado.");
                 } else {
-                    a = new Alumno(txtCampo1.getText(), txtCampo2.getText(), txtCampo3.getText());
-                    alumnoDAO.insertar(a);
-                    log("Alumno guardado.");
+                    // Para insertar desde aquí usamos valores por defecto
+                    a.setApellidos("Registrado");
+                    a.setUsername(a.getDni());
+                    a.setPassword("1234");
+                    a.setRol("alumno");
+                    int newId = usuarioDAO.registrar(a);
+                    if (newId > 0) {
+                        a.setId(newId);
+                        alumnoDAO.insertar(a);
+                        log("Alumno guardado.");
+                    }
                 }
                 cargarAlumnos();
             } else if (modoActual == 2) { // Curso
                 Curso c = new Curso(txtCampo1.getText(), Integer.parseInt(txtCampo2.getText()));
-                cursoDAO.insertar(c);
+                if (idSeleccionado != -1) {
+                    c.setId(idSeleccionado);
+                    // cursoDAO.actualizar(c); // Si existiera
+                } else {
+                    cursoDAO.insertar(c);
+                }
                 log("Curso guardado.");
                 cargarCursos();
+            } else if (modoActual == 4) { // Usuario
+                Usuario u = new Usuario();
+                u.setUsername(txtCampo1.getText());
+                u.setEmail(txtCampo2.getText());
+                u.setDni(txtCampo3.getText());
+                u.setNombre(txtCampo4.getText());
+                u.setApellidos(txtCampo5.getText());
+                u.setPassword(txtCampo6.getText());
+                u.setRol((String) comboRol.getSelectedItem());
+
+                if (idSeleccionado != -1) {
+                    u.setId(idSeleccionado);
+                    usuarioDAO.actualizar(u);
+                    log("Usuario actualizado.");
+                } else {
+                    usuarioDAO.registrar(u);
+                    log("Usuario registrado.");
+                }
+                cargarUsuarios();
             }
-            txtCampo1.setText("");
-            txtCampo2.setText("");
-            txtCampo3.setText("");
             idSeleccionado = -1;
+            limpiarCampos();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage());
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnAlumnos) {
-            cargarAlumnos();
-        } 
-        
-        if (e.getSource() == btnCursos) {
-            cargarCursos();
-        }
-
-        if (e.getSource() == btnMatriculas) {
-            cargarMatriculas();
-        }
-
-        if (e.getSource() == btnGestionUsuarios) {
-            new Registro().setVisible(true);
-        }   
-
-        if (e.getSource() == btnGuardar) {
-            ejecutarGuardar();
-        }
-
-        if (e.getSource() == itemColor) {
-            Color c = JColorChooser.showDialog(this, "Selecciona un color", getBackground());
-            if(c != null) getContentPane().setBackground(c);
-        }
-
-        if (e.getSource() == btnEliminar) {
-            ejecutarEliminar();
-        }
-
-        if (e.getSource() == itemCerrarSesion) {
-            new Login().setVisible(true);
-            this.dispose();
-        }
-    }
-
     private void ejecutarEliminar() {
-        int fila = tablaDatos.getSelectedRow();
-        if (fila == -1) {
+        if (idSeleccionado == -1) {
             JOptionPane.showMessageDialog(this, "Selecciona una fila primero.");
             return;
         }
 
-        int id = (int) modeloTabla.getValueAt(fila, 0);
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar el registro ID " + id + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar registro ID " + idSeleccionado + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
                 if (modoActual == 1) {
-                    alumnoDAO.eliminar(id);
+                    alumnoDAO.eliminar(idSeleccionado);
                     cargarAlumnos();
                 } else if (modoActual == 2) {
-                    cursoDAO.eliminar(id);
+                    cursoDAO.eliminar(idSeleccionado);
                     cargarCursos();
+                } else if (modoActual == 4) {
+                    usuarioDAO.eliminar(idSeleccionado);
+                    cargarUsuarios();
                 }
                 log("Registro eliminado.");
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
             }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnAlumnos) cargarAlumnos();
+        else if (e.getSource() == btnCursos) cargarCursos();
+        else if (e.getSource() == btnMatriculas) cargarMatriculas();
+        else if (e.getSource() == btnGestionUsuarios) cargarUsuarios();
+        else if (e.getSource() == btnGuardar) ejecutarGuardar();
+        else if (e.getSource() == btnEliminar) ejecutarEliminar();
+        else if (e.getSource() == itemCerrarSesion) {
+            new Login().setVisible(true);
+            this.dispose();
+        } else if (e.getSource() == itemColor) {
+            Color c = JColorChooser.showDialog(this, "Color fondo", getBackground());
+            if(c != null) getContentPane().setBackground(c);
+        } else if (e.getSource() == itemAcerca) {
+            JOptionPane.showMessageDialog(this, "Sistema Académico v2.0\nGestión Integral Usuarios", "Acerca de", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }
