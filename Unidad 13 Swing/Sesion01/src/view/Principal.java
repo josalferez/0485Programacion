@@ -105,9 +105,17 @@ public class Principal extends JFrame implements ActionListener {
                 if (fila != -1) {
                     idSeleccionado = (int) modeloTabla.getValueAt(fila, 0);
                     if (modoActual == 1) { // Alumnos
-                        txtCampo1.setText((String) modeloTabla.getValueAt(fila, 1));
-                        txtCampo2.setText((String) modeloTabla.getValueAt(fila, 2));
-                        txtCampo3.setText((String) modeloTabla.getValueAt(fila, 3));
+                        try {
+                            Alumno a = alumnoDAO.obtenerPorId(idSeleccionado);
+                            if (a != null) {
+                                txtCampo1.setText(a.getNombre());
+                                txtCampo2.setText(a.getEmail());
+                                txtCampo3.setText(a.getDni());
+                                txtCampo4.setText(a.getApellidos());
+                            }
+                        } catch (SQLException ex) {
+                            log("Error al recuperar alumno: " + ex.getMessage());
+                        }
                     } else if (modoActual == 2) { // Cursos
                         txtCampo1.setText((String) modeloTabla.getValueAt(fila, 1));
                         txtCampo2.setText(String.valueOf(modeloTabla.getValueAt(fila, 2)));
@@ -223,6 +231,9 @@ public class Principal extends JFrame implements ActionListener {
         lblCampo1.setText("Nombre:");
         lblCampo2.setText("Email:");
         lblCampo3.setText("DNI:");
+        lblCampo4.setText("Apellidos:");
+        lblCampo4.setVisible(true);
+        txtCampo4.setVisible(true);
 
         modeloTabla.setColumnIdentifiers(new String[]{"ID", "Nombre", "Email", "DNI"});
         modeloTabla.setRowCount(0);
@@ -332,6 +343,7 @@ public class Principal extends JFrame implements ActionListener {
             if (modoActual == 1) { // Alumno
                 Alumno a = new Alumno();
                 a.setNombre(txtCampo1.getText());
+                a.setApellidos(txtCampo4.getText());
                 a.setEmail(txtCampo2.getText());
                 a.setDni(txtCampo3.getText());
                 
