@@ -2,3 +2,4 @@
 *.sock
 *.lock
 *.tmp
+*.class
