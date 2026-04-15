@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+        <h1 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">🎓 Ejercicio: Centro Educativo (CRUD Multi-Model)</h1>
+        
+        <div style="background-color: #e8f4fd; border-left: 5px solid #3498db; padding: 15px; margin: 20px 0;">
+            <strong>🎯 Objetivo:</strong> Desarrollar una aplicación de consola en Java que realice un CRUD completo sobre <strong>tres tablas</strong> (Estudiantes, Profesores y Asignaturas), aplicando el patrón de diseño <strong>DAO</strong>. Este reto está diseñado para ser completado en <strong>120 minutos</strong>.
+        </div>
+
+        <hr>
+
+        <h2 style="color: #2980b9;">⚙️ Requisitos Técnicos</h2>
+
+        <h3>1. Base de Datos</h3>
+        <p>La base de datos debe llamarse <code>escuela_db</code>:</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Tabla</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Campos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>estudiantes</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>nombre</code> (VARCHAR), <code>email</code> (VARCHAR UNIQUE)</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>profesores</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>nombre</code> (VARCHAR), <code>especialidad</code> (VARCHAR)</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>asignaturas</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>nombre</code> (VARCHAR), <code>creditos</code> (INT)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Script SQL:</strong></p>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>CREATE DATABASE IF NOT EXISTS escuela_db;
+USE escuela_db;
+
+CREATE TABLE estudiantes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE profesores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    especialidad VARCHAR(100)
+);
+
+CREATE TABLE asignaturas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    creditos INT DEFAULT 6
+);</code></pre>
+
+        <h3>2. Estructura del Proyecto</h3>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px;"><code>src/
+├── model/           ← Estudiante.java, Profesor.java, Asignatura.java
+├── dao/             ← EstudianteDAO, ProfesorDAO, AsignaturaDAO (y sus Impls)
+├── db/              ← ConexionDB.java
+└── Main.java        ← Menú interactivo</code></pre>
+
+        <hr>
+
+        <h2 style="color: #2980b9;">📋 Menú de la Aplicación</h2>
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Opción</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">1</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">🧑‍🎓 Gestión de Estudiantes</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">2</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">👨‍🏫 Gestión de Profesores</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">3</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">📚 Gestión de Asignaturas</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">0</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">🚪 Salir</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h2 style="color: #2980b9;">💾 Anexo: Consultas SQL</h2>
+        <ul style="background-color: #fdfefe; border: 1px dashed #3498db; padding: 15px; list-style-type: square;">
+            <li><strong>Estudiante:</strong> <code>INSERT INTO estudiantes (nombre, email) VALUES (?, ?)</code></li>
+            <li><strong>Profesor:</strong> <code>INSERT INTO profesores (nombre, especialidad) VALUES (?, ?)</code></li>
+            <li><strong>Asignatura:</strong> <code>INSERT INTO asignaturas (nombre, creditos) VALUES (?, ?)</code></li>
+        </ul>
+    </div>
+</body>
+</html>

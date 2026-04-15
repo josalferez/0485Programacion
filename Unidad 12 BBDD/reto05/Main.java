@@ -29,6 +29,7 @@ public class Main {
 
         switch (opcion) {
             case 1->crearProducto();
+            case 2->obtenerProductoID();
             case 0->System.exit(0);
             default->System.out.println("Opcion no válida");
         }
@@ -48,8 +49,22 @@ public class Main {
             System.out.println("Producto creado con éxito.");
 
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
+    static void obtenerProductoID(){
+        try {
+            System.out.print("Ingrese el ID del producto: ");
+            int id = Integer.parseInt(scanner.nextLine());
+            Producto producto = productoDAO.obtenerPorId(id);
+            if ( producto != null){
+                System.out.println(producto);
+            }else{
+                System.out.println("Producto no encontrado!");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 }

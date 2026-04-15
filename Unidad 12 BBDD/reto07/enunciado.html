@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+        <h1 style="color: #2c3e50; border-bottom: 2px solid #27ae60; padding-bottom: 10px;">🏪 Ejercicio: Gestión de Tienda (CRUD Multi-Model)</h1>
+        
+        <div style="background-color: #e9f7ef; border-left: 5px solid #27ae60; padding: 15px; margin: 20px 0;">
+            <strong>🎯 Objetivo:</strong> Desarrollar una aplicación de consola en Java que realice un CRUD completo sobre <strong>dos tablas</strong> relacionadas indirectamente (Productos y Clientes), aplicando el patrón de diseño <strong>DAO (Data Access Object)</strong> de forma escalable. Este reto está diseñado para ser completado en <strong>90 minutos</strong>.
+        </div>
+
+        <hr>
+
+        <h2 style="color: #1e8449;">⚙️ Requisitos Técnicos</h2>
+
+        <h3>1. Base de Datos</h3>
+        <p>La base de datos debe llamarse <code>tienda_db</code> con las siguientes tablas:</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Tabla</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Campos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>productos</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>nombre</code> (VARCHAR), <code>precio</code> (DECIMAL), <code>stock</code> (INT)</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>clientes</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>nombre</code> (VARCHAR), <code>email</code> (VARCHAR), <code>telefono</code> (VARCHAR)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Script SQL de creación:</strong></p>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>CREATE DATABASE IF NOT EXISTS tienda_db;
+USE tienda_db;
+
+CREATE TABLE productos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    stock INT DEFAULT 0
+);
+
+CREATE TABLE clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    telefono VARCHAR(20)
+);</code></pre>
+
+        <h3>2. Estructura del Proyecto</h3>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px;"><code>src/
+├── model/           ← Producto.java, Cliente.java
+├── dao/             ← ProductoDAO.java, ClienteDAO.java y sus Implementaciones (Impl)
+├── db/              ← ConexionDB.java
+└── Main.java        ← Menú interactivo con submenús</code></pre>
+
+        <hr>
+
+        <h2 style="color: #1e8449;">📋 Funcionalidades Requeridas</h2>
+        <p>Debes implementar el mantenimiento completo para ambas entidades:</p>
+        
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 1; background: #fdfefe; border: 1px solid #d4efdf; padding: 15px; border-radius: 5px;">
+                <h4 style="margin-top: 0; color: #117a65;">Gestión de Productos</h4>
+                <ul>
+                    <li>Listar catálogo.</li>
+                    <li>Añadir nuevo producto.</li>
+                    <li>Actualizar precio/stock.</li>
+                    <li>Eliminar por ID.</li>
+                </ul>
+            </div>
+            <div style="flex: 1; background: #fdfefe; border: 1px solid #d4efdf; padding: 15px; border-radius: 5px;">
+                <h4 style="margin-top: 0; color: #117a65;">Gestión de Clientes</h4>
+                <ul>
+                    <li>Listar base de clientes.</li>
+                    <li>Registrar nuevo cliente.</li>
+                    <li>Buscar por ID.</li>
+                    <li>Dar de baja (Eliminar).</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2 style="color: #1e8449;">📑 Interfaces DAO</h2>
+        <p>Debes aplicar interfaces separadas para mantener el código organizado:</p>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>// Ejemplo para Clientes
+public interface ClienteDAO {
+    void crear(Cliente cliente) throws SQLException;
+    List&lt;Cliente&gt; obtenerTodos() throws SQLException;
+    Cliente obtenerPorId(int id) throws SQLException;
+    void actualizar(Cliente cliente) throws SQLException;
+    void eliminar(int id) throws SQLException;
+}</code></pre>
+
+        <hr>
+
+        <h2 style="color: #1e8449;">📋 Menú de la Aplicación</h2>
+        <p>Se sugiere un menú principal que derive a submenús de gestión:</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Opción</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">1</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">📦 Gestión de Productos</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">2</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">👤 Gestión de Clientes</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">0</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">🚪 Salir</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h2 style="color: #1e8449;">🟢 Criterios de Evaluación</h2>
+        <ul style="list-style-type: none; padding-left: 0;">
+            <li style="margin-bottom: 10px;">✅ <strong>Escalabilidad:</strong> Código organizado para soportar múltiples DAOs.</li>
+            <li style="margin-bottom: 10px;">✅ <strong>Integridad:</strong> Manejo de campos <code>UNIQUE</code> (email).</li>
+            <li style="margin-bottom: 10px;">✅ <strong>Interactividad:</strong> Menú fluido entre ambas áreas.</li>
+            <li style="margin-bottom: 10px;">✅ <strong>Seguridad:</strong> Uso de <code>PreparedStatement</code>.</li>
+        </ul>
+
+        <hr>
+
+        <h2 style="color: #1e8449;">💾 Anexo: Consultas SQL</h2>
+        <ul style="background-color: #fdfefe; border: 1px dashed #27ae60; padding: 15px; list-style-type: square;">
+            <li><strong>Producto:</strong> <code>INSERT INTO productos (nombre, precio, stock) VALUES (?, ?, ?)</code></li>
+            <li><strong>Cliente:</strong> <code>INSERT INTO clientes (nombre, email, telefono) VALUES (?, ?, ?)</code></li>
+        </ul>
+    </div>
+</body>
+</html>

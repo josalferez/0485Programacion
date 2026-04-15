@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+        <h1 style="color: #2c3e50; border-bottom: 2px solid #ed6c02; padding-bottom: 10px;">🔧 Ejercicio: Taller Mecánico (CRUD Multi-Model)</h1>
+        
+        <div style="background-color: #fff4e5; border-left: 5px solid #ed6c02; padding: 15px; margin: 20px 0;">
+            <strong>🎯 Objetivo:</strong> Desarrollar una aplicación de consola en Java que realice un CRUD completo sobre <strong>tres tablas</strong> (Vehículos, Mecánicos y Reparaciones), aplicando el patrón de diseño <strong>DAO</strong>. Este reto está diseñado para ser completado en <strong>120 minutos</strong>.
+        </div>
+
+        <hr>
+
+        <h2 style="color: #e65100;">⚙️ Requisitos Técnicos</h2>
+
+        <h3>1. Base de Datos</h3>
+        <p>La base de datos debe llamarse <code>taller_db</code>:</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Tabla</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Campos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>vehiculos</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>matricula</code> (VARCHAR UNIQUE), <code>marca</code> (VARCHAR), <code>modelo</code> (VARCHAR)</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>mecanicos</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>nombre</code> (VARCHAR), <code>especialidad</code> (VARCHAR)</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>reparaciones</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>descripcion</code> (TEXT), <code>fecha</code> (DATE), <code>coste</code> (DECIMAL)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Script SQL:</strong></p>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>CREATE DATABASE IF NOT EXISTS taller_db;
+USE taller_db;
+
+CREATE TABLE vehiculos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    matricula VARCHAR(20) UNIQUE NOT NULL,
+    marca VARCHAR(50) NOT NULL,
+    modelo VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE mecanicos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    especialidad VARCHAR(100)
+);
+
+CREATE TABLE reparaciones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion TEXT NOT NULL,
+    fecha DATE NOT NULL,
+    coste DECIMAL(10, 2) DEFAULT 0.00
+);</code></pre>
+
+        <h3>2. Estructura del Proyecto</h3>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px;"><code>src/
+├── model/           ← Vehiculo.java, Mecanico.java, Reparacion.java
+├── dao/             ← VehiculoDAO, MecanicoDAO, ReparacionDAO (y sus Impls)
+├── db/              ← ConexionDB.java
+└── Main.java        ← Menú interactivo</code></pre>
+
+        <hr>
+
+        <h2 style="color: #e65100;">📋 Menú de la Aplicación</h2>
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Opción</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">1</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">🚗 Gestión de Vehículos</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">2</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">👨‍🔧 Gestión de Mecánicos</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">3</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">🛠️ Gestión de Reparaciones</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">0</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">🚪 Salir</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h2 style="color: #e65100;">💾 Anexo: Consultas SQL</h2>
+        <ul style="background-color: #fdfefe; border: 1px dashed #ed6c02; padding: 15px; list-style-type: square;">
+            <li><strong>Vehículo:</strong> <code>INSERT INTO vehiculos (matricula, marca, modelo) VALUES (?, ?, ?)</code></li>
+            <li><strong>Mecánico:</strong> <code>INSERT INTO mecanicos (nombre, especialidad) VALUES (?, ?)</code></li>
+            <li><strong>Reparación:</strong> <code>INSERT INTO reparaciones (descripcion, fecha, coste) VALUES (?, ?, ?)</code></li>
+        </ul>
+    </div>
+</body>
+</html>

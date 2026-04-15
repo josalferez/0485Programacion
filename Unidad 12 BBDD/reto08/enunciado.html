@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div style="max-width: 900px; margin: 0 auto; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+        <h1 style="color: #2c3e50; border-bottom: 2px solid #e67e22; padding-bottom: 10px;">🏋️ Ejercicio: Gestión de Gimnasio (CRUD Multi-Model)</h1>
+        
+        <div style="background-color: #fef5e7; border-left: 5px solid #e67e22; padding: 15px; margin: 20px 0;">
+            <strong>🎯 Objetivo:</strong> Desarrollar una aplicación de consola en Java que realice un CRUD completo sobre <strong>dos tablas</strong> (Socios y Clases), aplicando el patrón de diseño <strong>DAO</strong>. Este reto está diseñado para ser completado en <strong>90 minutos</strong>.
+        </div>
+
+        <hr>
+
+        <h2 style="color: #d35400;">⚙️ Requisitos Técnicos</h2>
+
+        <h3>1. Base de Datos</h3>
+        <p>La base de datos debe llamarse <code>gimnasio_db</code>:</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Tabla</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Campos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>socios</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>nombre</code> (VARCHAR), <code>dni</code> (VARCHAR UNIQUE), <code>fecha_alta</code> (DATE)</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><strong>clases</strong></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>id</code> (PK, AI), <code>nombre</code> (VARCHAR), <code>monitor</code> (VARCHAR), <code>cupo</code> (INT)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Script SQL:</strong></p>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>CREATE DATABASE IF NOT EXISTS gimnasio_db;
+USE gimnasio_db;
+
+CREATE TABLE socios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    dni VARCHAR(20) UNIQUE NOT NULL,
+    fecha_alta DATE NOT NULL
+);
+
+CREATE TABLE clases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    monitor VARCHAR(100),
+    cupo INT DEFAULT 20
+);</code></pre>
+
+        <h3>2. Estructura del Proyecto</h3>
+        <pre style="background-color: #f8f9fa; border: 1px solid #eaebed; padding: 15px; border-radius: 5px;"><code>src/
+├── model/           ← Socio.java, Clase.java
+├── dao/             ← SocioDAO.java, ClaseDAO.java y sus Impls
+├── db/              ← ConexionDB.java
+└── Main.java        ← Menú interactivo</code></pre>
+
+        <hr>
+
+        <h2 style="color: #d35400;">📋 Menú de la Aplicación</h2>
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Opción</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">1</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">👤 Gestión de Socios</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">2</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">📅 Gestión de Clases</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">0</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">🚪 Salir</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h2 style="color: #d35400;">💾 Anexo: Consultas SQL</h2>
+        <ul style="background-color: #fdfefe; border: 1px dashed #e67e22; padding: 15px; list-style-type: square;">
+            <li><strong>Socio:</strong> <code>INSERT INTO socios (nombre, dni, fecha_alta) VALUES (?, ?, ?)</code></li>
+            <li><strong>Clase:</strong> <code>INSERT INTO clases (nombre, monitor, cupo) VALUES (?, ?, ?)</code></li>
+        </ul>
+    </div>
+</body>
+</html>
