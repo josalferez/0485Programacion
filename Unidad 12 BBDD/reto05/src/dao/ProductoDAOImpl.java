@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import src.model.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -29,41 +28,50 @@ public class ProductoDAOImpl implements ProductoDAO {
     @Override
     public List<Producto> obtenerTodos() throws SQLException {
         String sql = "SELECT * FROM productos";
-        List<Producto> producto = new ArrayList<>();
+        List<Producto> productos = new ArrayList<>();
 
         try (Connection conn = ConexionDB.conectar();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                producto.add(new Producto(rs.getString("nombre"), rs.getInt("cantidad"), rs.getDouble("precio")));
+                productos.add(new Producto(
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getInt("cantidad"),
+                    rs.getDouble("precio")
+                ));
             }
-            return producto;
-
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Error al obtener todos los productos: " + e.getMessage());
+            throw e; 
         }
+        return productos;
     }
 
+    @Override
     public Producto obtenerPorId(int id) throws SQLException {
         String sql = "SELECT * FROM productos WHERE id = ?";
 
         try (Connection conn = ConexionDB.conectar();
-              PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, id);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()){
-                        return new Producto(rs.getInt("id"), rs.getString("nombre"), rs.getInt("cantidad"),rs.getDouble("precio"));
-                    }
-                    
-                } catch (Exception e) {
-                    // TODO: handle exception
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Producto(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getInt("cantidad"),
+                        rs.getDouble("precio")
+                    );
                 }
-            
-        } catch (Exception e) {
-            // TODO: handle exception
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener producto por ID: " + e.getMessage());
+            throw e;
         }
+        return null;
     }
 
-    /// public void actualizar(Producto producto) throws SQLException{}
+    // public void actualizar(Producto producto) throws SQLException{}
     // public void eliminar(int id) throws SQLException{}
 }
