@@ -76,9 +76,9 @@ public class Principal extends JFrame implements ActionListener {
 
     private void initPanelNavegacion() {
         JPanel panelLateral = new JPanel();
-        panelLateral.setLayout(new GridLayout(6, 1, 0, 10) );
+        panelLateral.setLayout(new GridLayout(6, 1, 0, 10) ); // 6 filas, 1 columna, espaciado de 10px
         panelLateral.setBackground(new Color(45, 52, 54));
-        panelLateral.setPreferredSize(new Dimension(200, 0));
+        panelLateral.setPreferredSize(new Dimension(200, 0)); 
 
         btnAlumnos = new JButton("Gestión Alumnos");
         btnCursos = new JButton("Gestión Cursos");
