@@ -69,6 +69,7 @@ Debes implementar el mantenimiento completo para ambas entidades:
 ## 📑 Interfaces DAO
 
 Debes aplicar interfaces separadas para mantener el código organizado:
+No te doy la interfaz de Producto porque debes pensar tú su CRUD e implementarlo
 
 ```java
 // Ejemplo para Clientes
