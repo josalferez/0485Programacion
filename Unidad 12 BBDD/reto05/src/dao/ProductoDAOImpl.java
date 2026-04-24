@@ -72,6 +72,36 @@ public class ProductoDAOImpl implements ProductoDAO {
         return null;
     }
 
-    // public void actualizar(Producto producto) throws SQLException{}
-    // public void eliminar(int id) throws SQLException{}
+    @Override
+    public void actualizar(Producto producto) throws SQLException{
+        String sql = "UPDATE productos SET nombre = ?, cantidad = ?, precio = ? WHERE id = ?";
+
+        try (Connection conn = ConexionDB.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        
+        stmt.setString(1, producto.getNombre());
+        stmt.setInt(2, producto.getCantidad());
+        stmt.setDouble(3, producto.getPrecio());
+        stmt.setInt(4, producto.getId());
+
+        stmt.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void eliminar(int id) throws SQLException{
+        String sql = "DELETE FROM productos WHERE id = ?";
+        try (Connection conn = ConexionDB.conectar();
+               PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+            
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 }

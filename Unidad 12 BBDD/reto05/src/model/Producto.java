@@ -9,6 +9,10 @@ public class Producto{
     private double precio;
 
     // Constructor de la clase 
+
+    // constructor vacío para los updates
+    public Producto(){};
+
     public Producto(int id, String nombre, int cantidad, double precio) {
         this.id = id;
         this.nombre = nombre;
